@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Search, Calendar, Clock, Cpu, Hash, Layers, AlertCircle } from 'lucide-react';
 
-const DISCORD_EPOCH = 1420070400000n; // 2015-01-01T00:00:00.000Z
+const DISCORD_EPOCH = 1420070400000n;
 
 interface DecodedSnowflake {
   id: string;

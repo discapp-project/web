@@ -480,7 +480,6 @@ while True:
               </div>
             )}
 
-            {/* BUTTONS TAB */}
             {activeTab === "buttons" && (
               <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -510,7 +509,6 @@ while True:
               </div>
             )}
 
-            {/* EXPORT TAB */}
             {activeTab === "export" && (
               <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -586,7 +584,6 @@ while True:
 
           </div>
 
-          {/* RIGHT COLUMN: Ultra-Realistic Discord Profile Preview */}
           {activeTab !== "export" && (
             <div style={{ display: "flex", flexDirection: "column", gap: "20px", position: "sticky", top: "20px" }}>
               
@@ -602,7 +599,6 @@ while True:
 
                   <div style={{ display: "flex", gap: "14px", alignItems: "flex-start" }}>
                     
-                    {/* Assets Preview */}
                     {showAssets && largeImageKey ? (
                       <div style={{ position: "relative", width: "64px", height: "64px", flexShrink: 0 }}>
                         <div
@@ -626,7 +622,6 @@ while True:
                       </div>
                     )}
 
-                    {/* Presence Content */}
                     <div style={{ display: "flex", flexDirection: "column", gap: "3px", flex: 1, overflow: "hidden" }}>
                       <span style={{ fontSize: "14px", fontWeight: "700", color: "#f2f3f5" }}>
                         {appName || "Discapp Utility Suite"}
@@ -657,7 +652,6 @@ while True:
 
                   </div>
 
-                  {/* Simulated Discord Action Buttons */}
                   {showButtons && (button1Label || button2Label) && (
                     <div style={{ display: "flex", flexDirection: "column", gap: "6px", marginTop: "4px", width: "100%" }}>
                       {button1Label && (

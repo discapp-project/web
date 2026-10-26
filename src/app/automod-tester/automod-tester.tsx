@@ -38,7 +38,6 @@ export default function AutoModTester() {
     "Hey guys, check out this free nitro giveaway at discord.gg/fakeinvite!"
   );
 
-  // Rule Creator State
   const [newRuleName, setNewRuleName] = useState<string>("");
   const [newRuleType, setNewRuleType] = useState<"KEYWORD" | "REGEX">("REGEX");
   const [newRuleInput, setNewRuleInput] = useState<string>("");
@@ -141,7 +140,6 @@ export default function AutoModTester() {
           gap: "28px",
         }}
       >
-        {/* Header Section */}
         <div style={{ textAlign: "left" }}>
           <h1 style={{ fontSize: "28px", fontWeight: "700", color: "#ffffff", marginBottom: "8px", letterSpacing: "-0.5px" }}>
             AutoMod Tester
@@ -151,10 +149,8 @@ export default function AutoModTester() {
           </p>
         </div>
 
-        {/* SINGLE VERTICAL STACK CONTAINER */}
         <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
           
-          {/* SECTION 1: LIVE SIMULATOR */}
           <div
             style={{
               backgroundColor: "#141518",
@@ -170,7 +166,6 @@ export default function AutoModTester() {
               Simulator
             </h3>
 
-            {/* Test Message Input */}
             <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
               <label style={{ fontSize: "11px", color: "#949ba4", fontWeight: "600", textTransform: "uppercase" }}>
                 Test Message Input
@@ -197,7 +192,6 @@ export default function AutoModTester() {
               />
             </div>
 
-            {/* Engine Verdict Box */}
             <div
               style={{
                 backgroundColor: "#0b0c0e",
@@ -267,7 +261,6 @@ export default function AutoModTester() {
 
           </div>
 
-          {/* SECTION 2: ADD NEW RULE */}
           <div
             style={{
               backgroundColor: "#141518",
@@ -403,8 +396,7 @@ export default function AutoModTester() {
             </form>
           </div>
 
-          {/* SECTION 3: CONFIGURED RULES LIST */}
-          <div
+\          <div
             style={{
               backgroundColor: "#141518",
               border: "1px solid #232428",

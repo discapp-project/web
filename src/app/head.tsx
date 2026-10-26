@@ -1,5 +1,3 @@
-// app/head.tsx
-
 export default function Head() {
   const discordComponentEmbed = {
     component: {
