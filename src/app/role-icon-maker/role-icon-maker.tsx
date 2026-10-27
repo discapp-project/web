@@ -292,7 +292,7 @@ export default function RoleIconBuilder() {
         const png = canvas.toDataURL("image/png");
         const downloadLink = document.createElement("a");
         downloadLink.href = png;
-        downloadLink.download = `role-icon-${selectedIcon}.png`;
+        downloadLink.download = `discapp-org-${selectedIcon}.png`;
         document.body.appendChild(downloadLink);
         downloadLink.click();
         document.body.removeChild(downloadLink);
