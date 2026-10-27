@@ -47,7 +47,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
               <Link className="topbar-link" href="https://discord.gg/ymc3Ba4qk9">Join the Community!</Link>
               <BugReportButton />
               <Link 
-                href="https://github.com/discapp-project" 
+                href="https://github.com/discapp-project/web" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 aria-label="Visit Discapp on GitHub"
