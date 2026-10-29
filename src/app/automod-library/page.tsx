@@ -1,10 +1,7 @@
-import type { Metadata } from "next";
+import { createPageMetadata } from "../page-metadata";
 import AutomodLibrary from "./automod-library";
 
-export const metadata: Metadata = {
-  title: "Automod Library | Discapp",
-  description: "View and copy automod rules and regexes.",
-};
+export const metadata = createPageMetadata({ title: "Discord AutoMod Rules Library | Discapp", description: "Browse and copy Discord AutoMod rules, keyword filters, and regular expressions for server moderation.", path: "/automod-library" });
 
 export default function AutomodLibraryPage() {
   return <AutomodLibrary />;

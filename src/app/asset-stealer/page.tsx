@@ -1,10 +1,7 @@
-import type { Metadata } from "next";
+import { createPageMetadata } from "../page-metadata";
 import AssetStealer from "./asset-stealer";
 
-export const metadata: Metadata = {
-  title: "Asset Stealer | Discapp",
-  description: "Steal assets from a Discord server.",
-};
+export const metadata = createPageMetadata({ title: "Discord Server Asset Downloader | Discapp", description: "Find and download accessible images and assets from a Discord server using its invite or server details.", path: "/asset-stealer" });
 
 export default function AssetStealerPage() {
   return <AssetStealer />;

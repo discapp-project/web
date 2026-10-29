@@ -292,7 +292,7 @@ export default function DiscordMarkdownLibrary() {
           />
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px', alignItems: 'start' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))', gap: '16px', alignItems: 'start' }}>
           
           <div style={{ backgroundColor: '#1c1d22', borderRadius: '6px', border: '1px solid #2b2d31', padding: '8px', maxHeight: '600px', overflowY: 'auto' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>

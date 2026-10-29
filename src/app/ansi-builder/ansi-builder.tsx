@@ -58,7 +58,7 @@ export default function AnsiColorBuilder() {
           </p>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: "24px", alignItems: "start" }}>
+        <div className="mobile-stack-grid" style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: "24px", alignItems: "start" }}>
           
           <div style={{ backgroundColor: "#141518", border: "1px solid #232428", borderRadius: "12px", padding: "24px", display: "flex", flexDirection: "column", gap: "20px" }}>
             <h3 style={{ fontSize: "16px", fontWeight: "700", color: "#ffffff", margin: 0 }}>

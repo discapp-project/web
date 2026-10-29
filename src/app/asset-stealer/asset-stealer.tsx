@@ -224,7 +224,7 @@ export default function AssetStealer() {
 
         {asset ? (
           <div style={{ backgroundColor: '#1c1d22', borderRadius: '8px', border: '1px solid #2b2d31', padding: '24px', marginBottom: '32px' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '28px', alignItems: 'start' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))', gap: '28px', alignItems: 'start' }}>
               
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
                 <div style={{
@@ -465,7 +465,7 @@ export default function AssetStealer() {
             <HelpCircle size={18} style={{ color: '#9bf0be' }} /> How to copy custom emojis
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '16px' }}>
             <div style={{ backgroundColor: '#1c1d22', border: '1px solid #2b2d31', borderRadius: '6px', padding: '16px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#9bf0be', fontSize: '13px', fontWeight: '700', marginBottom: '8px' }}>
                 <Laptop size={14} /> PC / Desktop App

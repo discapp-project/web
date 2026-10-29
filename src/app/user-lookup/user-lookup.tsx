@@ -237,7 +237,7 @@ export default function DiscordUserLookup() {
         }
         .info-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
           gap: 12px;
         }
         .tab-btn {
@@ -270,7 +270,7 @@ export default function DiscordUserLookup() {
         </header>
 
         <div style={{ backgroundColor: '#121316', border: '1px solid #1c1d22', borderRadius: '6px', padding: '16px', marginBottom: '24px' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', alignItems: 'end' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '16px', alignItems: 'end' }}>
             
             <div>
               <label style={{ display: 'block', fontSize: '13px', fontWeight: 700, color: '#ffffff', marginBottom: '4px' }}>

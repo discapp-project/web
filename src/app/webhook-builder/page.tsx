@@ -1,10 +1,7 @@
-import type { Metadata } from "next";
+import { createPageMetadata } from "../page-metadata";
 import WebhookBuilder from "./webhook-builder";
 
-export const metadata: Metadata = {
-  title: "Webhook Builder | Discapp",
-  description: "Compose, preview, edit, and send custom Discord webhook messages.",
-};
+export const metadata = createPageMetadata({ title: "Discord Webhook Builder | Discapp", description: "Compose and preview Discord webhook messages with embeds, formatting, and attachments, then send them to a webhook URL.", path: "/webhook-builder" });
 
 export default function WebhookBuilderPage() {
   return <WebhookBuilder />;

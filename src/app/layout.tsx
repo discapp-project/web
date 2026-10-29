@@ -14,13 +14,27 @@ interface RootLayoutProps {
 }
 
 export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
   themeColor: "#acf6a5",
 };
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://discapp.org"),
-  manifest: '/manifest.json',
+  title: "Discapp | Discord Server Tools and Utilities",
+  description: "Free Discord tools for server owners and communities: build webhooks, create role icons, calculate permissions, format timestamps, and more.",
+  applicationName: "Discapp",
+  category: "technology",
+  manifest: "/manifest.json",
+  robots: { index: true, follow: true },
   openGraph: {
+    title: "Discapp | Discord Server Tools and Utilities",
+    description: "Practical tools for Discord servers, roles, webhooks, moderation, and community management.",
+    url: "/",
+    siteName: "Discapp",
+    locale: "en_US",
+    type: "website",
     images: [
       {
         url: '/discapp-mini-nobg.png',
@@ -31,7 +45,9 @@ export const metadata: Metadata = {
     ],
   },
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
+    title: "Discapp | Discord Server Tools and Utilities",
+    description: "Practical tools for Discord servers, roles, webhooks, moderation, and community management.",
     images: ['/discapp-mini-nobg.png'],
   },
 };
@@ -44,7 +60,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <nav className="topbar" aria-label="Main navigation">
             <Link className="brand" href="/">DISCAPP</Link>
             <div className="topbar-actions">
-              <Link className="topbar-link" href="https://discord.gg/ymc3Ba4qk9">Join the Community!</Link>
+              <Link className="topbar-link topbar-community" href="https://discord.gg/ymc3Ba4qk9">Join the Community!</Link>
               <BugReportButton />
               <Link 
                 href="https://github.com/discapp-project/web" 

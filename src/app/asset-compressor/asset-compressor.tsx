@@ -241,7 +241,7 @@ export default function EmojiStickerCompressor() {
           )}
 
           {(previewUrl || compressedUrl) && (
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "16px" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 280px), 1fr))", gap: "16px" }}>
               
               {previewUrl && (
                 <div style={{ backgroundColor: "#16181b", border: "1px solid #1e1f22", borderRadius: "8px", padding: "16px" }}>

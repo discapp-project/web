@@ -1,11 +1,11 @@
-import type { Metadata } from "next";
+import { createPageMetadata } from "./page-metadata";
 import Home from "./home";
 
-export const metadata: Metadata = {
-  title: "Discapp | All In One Toolkit",
-  description:
-    "Get access to every tool on Discord as well as libraries to help make your life much easier!",
-};
+export const metadata = createPageMetadata({
+  title: "Discapp | Discord Server Tools and Utilities",
+  description: "Free Discord tools for server owners and communities: build webhooks, create role icons, calculate permissions, format timestamps, and more.",
+  path: "/",
+});
 
 export default function HomePage() {
   return <Home />;

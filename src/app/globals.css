@@ -23,9 +23,13 @@ body {
   color: var(--text);
   font-family: var(--font-plus-jakarta-sans), sans-serif;
   -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
 }
 button, input, textarea, select { font: inherit; }
 button { color: inherit; }
+input, textarea, select { min-width: 0; max-width: 100%; }
+img, video, canvas { max-width: 100%; }
+pre { max-width: 100%; overflow-x: auto; }
 button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
@@ -34,11 +38,13 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
 
 .app-shell { min-height: 100vh; display: flex; flex-direction: column; }
 .topbar {
-  height: 56px;
+  min-height: 56px;
   flex: 0 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 16px;
   padding: 0 max(24px, calc((100vw - 1040px) / 2));
   border-bottom: 1px solid var(--line);
 }
@@ -349,12 +355,16 @@ a.preview-embed-title:hover { text-decoration: underline; }
 .automod-match-list { margin-left: auto; color: #d5d7dc; font-family: Consolas, "SFMono-Regular", monospace; overflow-wrap: anywhere; }
 .automod-empty-detail { align-self: start; color: var(--muted); font-size: 12px; }
 
+.mobile-stack-grid { min-width: 0; }
 .role-icon-builder-grid { width: 100%; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: start; gap: 20px; }
 .role-icon-editor, .role-icon-preview-column { min-width: 0; }
 .role-icon-tabs { min-width: 0; overflow-x: auto; scrollbar-width: thin; }
 .role-icon-tabs button { flex: 0 0 auto; }
 @media (max-width: 900px) {
   .role-icon-builder-grid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 760px) {
+  .mobile-stack-grid { grid-template-columns: minmax(0, 1fr) !important; }
 }
 @media (max-width: 600px) {
   .role-icon-builder { padding: 16px !important; }
@@ -380,8 +390,8 @@ a.preview-embed-title:hover { text-decoration: underline; }
 }
 
 @media (max-width: 600px) {
-  .topbar { height: 52px; padding: 0 17px; }
-  .topbar-actions { gap: 9px; }
+  .topbar { min-height: 52px; padding: 8px 17px; }
+  .topbar-actions { flex-wrap: wrap; justify-content: flex-end; gap: 9px; }
   .global-footer { padding: 20px 17px; }
   .global-footer-links { gap: 10px 18px; }
   .global-footer-disclaimer { font-size: 12px; }
@@ -406,6 +416,14 @@ a.preview-embed-title:hover { text-decoration: underline; }
   .tool-icon { width: 28px; height: 28px; }
   .tool-title { font-size: 12px; }
   .tool-description { font-size: 10px; }
+}
+
+@media (max-width: 380px) {
+  .topbar { padding-right: 12px; padding-left: 12px; }
+  .topbar-actions { gap: 7px; }
+  .topbar-community { font-size: 0; }
+  .topbar-community::after { content: "Discord"; font-size: 10px; }
+  .global-footer-links { column-gap: 13px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

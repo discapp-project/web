@@ -86,7 +86,7 @@ export default function ZeroWidthSpaceInjector() {
           </p>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px", alignItems: "start" }}>
+        <div className="mobile-stack-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px", alignItems: "start" }}>
           
           <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
             

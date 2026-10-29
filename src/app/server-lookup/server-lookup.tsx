@@ -214,7 +214,7 @@ export default function DiscordServerLookup() {
         }
         .info-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
           gap: 12px;
         }
         .tab-btn {
@@ -450,7 +450,7 @@ export default function DiscordServerLookup() {
                   Active Guild Feature Flags ({featuresList.length})
                 </span>
                 {featuresList.length > 0 ? (
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '8px' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))', gap: '8px' }}>
                     {featuresList.map((feature, idx) => (
                       <div key={idx} style={{ backgroundColor: '#09090b', border: '1px solid #1c1d22', padding: '10px 12px', borderRadius: '4px', fontSize: '12px' }}>
                         <code style={{ color: '#9bf0be', fontSize: '11px', display: 'block', wordBreak: 'break-all' }}>{feature}</code>

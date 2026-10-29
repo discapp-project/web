@@ -296,7 +296,7 @@ export default function SoundboardStudio() {
               </div>
             </div>
 
-            <div style={{ backgroundColor: "#1e1f22", border: "1px solid #2b2d31", borderRadius: "8px", padding: "20px", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(360px, 1fr))", gap: "20px" }}>
+            <div style={{ backgroundColor: "#1e1f22", border: "1px solid #2b2d31", borderRadius: "8px", padding: "20px", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 360px), 1fr))", gap: "20px" }}>
               
               <div>
                 <div style={{ display: "flex", justifyContent: "space-between", fontSize: "13px", color: "#b5bac1", marginBottom: "8px" }}>

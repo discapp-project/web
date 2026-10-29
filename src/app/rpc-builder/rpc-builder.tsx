@@ -263,7 +263,7 @@ while True:
           })}
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: activeTab === "export" ? "1fr" : "1.25fr 1fr", gap: "24px", alignItems: "start" }}>
+        <div className="mobile-stack-grid" style={{ display: "grid", gridTemplateColumns: activeTab === "export" ? "1fr" : "1.25fr 1fr", gap: "24px", alignItems: "start" }}>
           
           <div style={{ backgroundColor: "#141518", border: "1px solid #232428", borderRadius: "12px", padding: "24px", display: "flex", flexDirection: "column", gap: "20px" }}>
             
