@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { 
   Crown, Shield, Sword, Star, Gem, Flame, Heart, Zap, Award, Target,
   Sparkles, Bot, Terminal, Code, Cpu, ShieldAlert, Skull, Ghost,
@@ -25,12 +25,15 @@ import {
   Minimize, Minimize2, Monitor, MoreHorizontal, MoreVertical, MousePointer,
   Navigation, Octagon, Pause, Percent, Phone, PieChart, Play, PlusCircle,
   Power, Printer, RefreshCw, Repeat, RotateCw, Rss, Save, Send, Settings,
+  SaveCheck, X,
   Share, Share2, ShoppingCart, Shuffle, Sidebar, Slash, Smartphone, Square,
   Sunrise, Sunset, Tablet, Tag, Thermometer, ThumbsDown, ThumbsUp, ToggleLeft,
-  ToggleRight, Trash, Trash2, TrendingDown, TrendingUp, Triangle,
+  ToggleRight, Trash, TrendingDown, TrendingUp, Triangle,
   Truck, Umbrella, Unlock, User, UserCheck, UserMinus,
   UserPlus, UserX, Users, Video, Voicemail, Volume, Volume1, Volume2,
-  VolumeX, Watch, Wifi, Wind, ZoomIn, ZoomOut
+  VolumeX, Watch, Wifi, Wind, ZoomIn, ZoomOut, PawPrint, Flower, Clover,
+  Cat, Dog, Bird, Fish, Leaf, Snowflake, Rainbow, Orbit, Atom, FlaskConical,
+  Medal, PartyPopper, Coffee, Pizza, Cross, Swords, TreePine, Mountain
 } from "lucide-react";
 
 const ALL_ICONS = [
@@ -177,10 +180,70 @@ const ALL_ICONS = [
   { id: "umbrella", icon: Umbrella, label: "Umbrella" },
   { id: "watch", icon: Watch, label: "Watch" },
   { id: "wind", icon: Wind, label: "Wind" },
-  { id: "wrench", icon: Wrench, label: "Wrench" }
+  { id: "wrench", icon: Wrench, label: "Wrench" },
+  { id: "paw-print", icon: PawPrint, label: "Paw Print" },
+  { id: "flower", icon: Flower, label: "Flower" },
+  { id: "clover", icon: Clover, label: "Clover" },
+  { id: "cat", icon: Cat, label: "Cat" },
+  { id: "dog", icon: Dog, label: "Dog" },
+  { id: "bird", icon: Bird, label: "Bird" },
+  { id: "fish", icon: Fish, label: "Fish" },
+  { id: "leaf", icon: Leaf, label: "Leaf" },
+  { id: "snowflake", icon: Snowflake, label: "Snowflake" },
+  { id: "rainbow", icon: Rainbow, label: "Rainbow" },
+  { id: "orbit", icon: Orbit, label: "Orbit" },
+  { id: "atom", icon: Atom, label: "Atom" },
+  { id: "flask", icon: FlaskConical, label: "Flask" },
+  { id: "medal", icon: Medal, label: "Medal" },
+  { id: "party-popper", icon: PartyPopper, label: "Party Popper" },
+  { id: "coffee", icon: Coffee, label: "Coffee" },
+  { id: "pizza", icon: Pizza, label: "Pizza" },
+  { id: "cross", icon: Cross, label: "Cross" },
+  { id: "swords", icon: Swords, label: "Swords" },
+  { id: "tree-pine", icon: TreePine, label: "Pine Tree" },
+  { id: "mountain", icon: Mountain, label: "Mountain" },
+  { id: "eye-off", icon: EyeOff, label: "Hidden Eye" },
+  { id: "sparkle", icon: Sparkle, label: "Sparkle" },
+  { id: "grid", icon: Grid, label: "Grid" },
+  { id: "plus", icon: Plus, label: "Plus" },
+  { id: "minus", icon: Minus, label: "Minus" },
+  { id: "move", icon: Move, label: "Move" },
+  { id: "droplet", icon: Droplet, label: "Droplet" },
+  { id: "octagon", icon: Octagon, label: "Octagon" },
+  { id: "pause", icon: Pause, label: "Pause" },
+  { id: "percent", icon: Percent, label: "Percent" },
+  { id: "pie-chart", icon: PieChart, label: "Pie Chart" },
+  { id: "play", icon: Play, label: "Play" },
+  { id: "plus-circle", icon: PlusCircle, label: "Add Circle" },
+  { id: "refresh", icon: RefreshCw, label: "Refresh" },
+  { id: "repeat", icon: Repeat, label: "Repeat" },
+  { id: "rotate-cw", icon: RotateCw, label: "Rotate Clockwise" },
+  { id: "rotate-ccw", icon: RotateCcw, label: "Rotate Counterclockwise" },
+  { id: "sunrise", icon: Sunrise, label: "Sunrise" },
+  { id: "sunset", icon: Sunset, label: "Sunset" },
+  { id: "tablet", icon: Tablet, label: "Tablet" },
+  { id: "thumbs-down", icon: ThumbsDown, label: "Thumbs Down" },
+  { id: "toggle-left", icon: ToggleLeft, label: "Toggle Left" },
+  { id: "toggle-right", icon: ToggleRight, label: "Toggle Right" },
+  { id: "unlock", icon: Unlock, label: "Unlock" },
+  { id: "user-check", icon: UserCheck, label: "Verified User" },
+  { id: "user-minus", icon: UserMinus, label: "Remove User" },
+  { id: "user-plus", icon: UserPlus, label: "Add User" },
+  { id: "user-x", icon: UserX, label: "Blocked User" },
+  { id: "volume", icon: Volume, label: "Volume" },
+  { id: "volume-low", icon: Volume1, label: "Low Volume" },
+  { id: "volume-high", icon: Volume2, label: "High Volume" },
+  { id: "volume-off", icon: VolumeX, label: "Muted Volume" },
+  { id: "minimize", icon: Minimize, label: "Minimize" },
+  { id: "maximize", icon: Maximize, label: "Maximize" },
+  { id: "minimize-2", icon: Minimize2, label: "Compact" },
+  { id: "maximize-2", icon: Maximize2, label: "Expand" },
+  { id: "zoom-in", icon: ZoomIn, label: "Zoom In" },
+  { id: "zoom-out", icon: ZoomOut, label: "Zoom Out" }
 ];
 
 const ITEMS_PER_PAGE = 30;
+const BUILDER_STORAGE_KEY = "discapp-role-icon-maker-settings-v1";
 
 const SHAPES = [
   { id: "circle", label: "Circle", rx: "50%" },
@@ -192,6 +255,10 @@ const SHAPES = [
   { id: "star-shape", label: "Star Base", path: "M 50 0 L 63 35 L 100 38 L 72 63 L 80 100 L 50 80 L 20 100 L 28 63 L 0 38 L 37 35 Z" },
   { id: "triangle", label: "Triangle", path: "M 50 0 L 100 100 L 0 100 Z" },
   { id: "pentagon", label: "Pentagon", path: "M 50 0 L 100 38 L 81 100 L 19 100 L 0 38 Z" },
+  { id: "rounded-diamond", label: "Gem Frame", path: "M 50 2 Q 57 2 62 8 L 92 38 Q 98 44 98 50 Q 98 56 92 62 L 62 92 Q 56 98 50 98 Q 44 98 38 92 L 8 62 Q 2 56 2 50 Q 2 44 8 38 L 38 8 Q 44 2 50 2 Z" },
+  { id: "shield-wide", label: "Knight Shield", path: "M 50 2 L 94 16 V 48 C 94 70 76 88 50 98 C 24 88 6 70 6 48 V 16 Z" },
+  { id: "burst", label: "Sunburst", path: "M 50 0 L 58 12 L 72 4 L 76 19 L 93 17 L 91 33 L 100 42 L 89 51 L 98 65 L 82 70 L 84 87 L 67 85 L 58 100 L 48 88 L 34 97 L 29 81 L 12 84 L 14 67 L 0 58 L 12 48 L 3 34 L 19 29 L 16 13 L 33 15 L 42 0 Z" },
+  { id: "ribbon", label: "Ribbon Badge", path: "M 50 0 L 95 18 V 55 C 95 78 73 91 50 100 C 27 91 5 78 5 55 V 18 Z" },
   { id: "cloud-shape", label: "Cloud Frame", path: "M 25 80 C 10 80, 0 70, 0 55 C 0 43, 8 33, 20 31 C 25 13, 40 0, 60 0 C 78 0, 92 12, 97 28 C 100 28, 100 29, 100 30 C 100 45, 90 80, 75 80 Z" },
   { id: "heart-shape", label: "Heart Base", path: "M 50 90 C 50 90, 0 55, 0 30 C 0 12, 15 0, 30 0 C 40 0, 47 6, 50 12 C 53 6, 60 0, 70 0 C 85 0, 100 12, 100 30 C 100 55, 50 90, 50 90 Z" },
   { id: "rounded-square", label: "Soft Square", rx: "24" },
@@ -205,7 +272,7 @@ export default function RoleIconBuilder() {
   const [customText, setCustomText] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   
-  const [selectedShape, setSelectedShape] = useState("badge");
+  const [selectedShape, setSelectedShape] = useState("circle");
   const [shapeScale, setShapeScale] = useState(100);
   const [shapeRotation, setShapeRotation] = useState(0);
   const [shapeCornerRadius, setShapeCornerRadius] = useState(24);
@@ -234,6 +301,9 @@ export default function RoleIconBuilder() {
   const [borderColor, setBorderColor] = useState("#FFFFFF");
   const [borderWidth, setBorderWidth] = useState(4);
   const [borderStyle, setBorderStyle] = useState("solid");
+  const [enableInnerBorder, setEnableInnerBorder] = useState(false);
+  const [innerBorderColor, setInnerBorderColor] = useState("#111214");
+  const [innerBorderWidth, setInnerBorderWidth] = useState(1.5);
   
   const [enableGlow, setEnableGlow] = useState(false);
   const [glowColor, setGlowColor] = useState("#5865F2");
@@ -246,8 +316,100 @@ export default function RoleIconBuilder() {
   const [shadowBlur, setShadowBlur] = useState(4);
 
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [backgroundImage, setBackgroundImage] = useState<string | null>(null);
+  const [shapeImageError, setShapeImageError] = useState("");
+  const [settingsLoaded, setSettingsLoaded] = useState(false);
+  const [saveStatus, setSaveStatus] = useState("Restoring saved design...");
 
   const svgRef = useRef<SVGSVGElement>(null);
+
+  const persistedSettings = JSON.stringify({
+    selectedIcon, customText, selectedShape, shapeScale, shapeRotation, shapeCornerRadius,
+    bgColor, useGradientBg, bgGradientEnd, bgGradientAngle, iconColor, useGradientIcon,
+    iconGradientEnd, iconGradientAngle, iconSize, iconStrokeWidth, iconOpacity, fontFamily,
+    fontWeight, iconOffsetX, iconOffsetY, iconRotation, enableBorder, borderColor,
+    borderWidth, borderStyle, enableInnerBorder, innerBorderColor, innerBorderWidth,
+    enableGlow, glowColor, glowBlur, enableShadow, shadowColor, shadowOffsetX,
+    shadowOffsetY, shadowBlur, uploadedImage, backgroundImage,
+  });
+
+  useEffect(() => {
+    try {
+      const stored = window.localStorage.getItem(BUILDER_STORAGE_KEY);
+      if (stored) {
+        const saved = JSON.parse(stored) as Record<string, unknown>;
+        const getString = (key: string, fallback: string) => typeof saved[key] === "string" ? saved[key] as string : fallback;
+        const getNumber = (key: string, fallback: number, min: number, max: number) => {
+          const value = saved[key];
+          return typeof value === "number" && Number.isFinite(value) ? Math.min(max, Math.max(min, value)) : fallback;
+        };
+        const getBoolean = (key: string, fallback: boolean) => typeof saved[key] === "boolean" ? saved[key] as boolean : fallback;
+        const getColor = (key: string, fallback: string) => {
+          const value = getString(key, fallback);
+          return /^#[\da-f]{6}$/i.test(value) ? value : fallback;
+        };
+
+        const storedIcon = getString("selectedIcon", selectedIcon);
+        const storedShape = getString("selectedShape", selectedShape);
+        if (ALL_ICONS.some((item) => item.id === storedIcon)) setSelectedIcon(storedIcon);
+        if (SHAPES.some((shape) => shape.id === storedShape)) setSelectedShape(storedShape);
+        setCustomText(getString("customText", "").slice(0, 3));
+        setShapeScale(getNumber("shapeScale", 100, 50, 100));
+        setShapeRotation(getNumber("shapeRotation", 0, 0, 360));
+        setShapeCornerRadius(getNumber("shapeCornerRadius", 24, 0, 50));
+        setBgColor(getColor("bgColor", "#5865F2"));
+        setUseGradientBg(getBoolean("useGradientBg", false));
+        setBgGradientEnd(getColor("bgGradientEnd", "#eb459e"));
+        setBgGradientAngle(getNumber("bgGradientAngle", 135, 0, 360));
+        setIconColor(getColor("iconColor", "#FFFFFF"));
+        setUseGradientIcon(getBoolean("useGradientIcon", false));
+        setIconGradientEnd(getColor("iconGradientEnd", "#57f287"));
+        setIconGradientAngle(getNumber("iconGradientAngle", 45, 0, 360));
+        setIconSize(getNumber("iconSize", 60, 20, 90));
+        setIconStrokeWidth(getNumber("iconStrokeWidth", 2.2, 0.5, 4));
+        setIconOpacity(getNumber("iconOpacity", 100, 10, 100));
+        setFontFamily(getString("fontFamily", "sans-serif"));
+        setFontWeight(getString("fontWeight", "bold"));
+        setIconOffsetX(getNumber("iconOffsetX", 0, -20, 20));
+        setIconOffsetY(getNumber("iconOffsetY", 0, -20, 20));
+        setIconRotation(getNumber("iconRotation", 0, 0, 360));
+        setEnableBorder(getBoolean("enableBorder", false));
+        setBorderColor(getColor("borderColor", "#FFFFFF"));
+        setBorderWidth(getNumber("borderWidth", 4, 1, 10));
+        setBorderStyle(["solid", "dashed", "dotted"].includes(getString("borderStyle", "solid")) ? getString("borderStyle", "solid") : "solid");
+        setEnableInnerBorder(getBoolean("enableInnerBorder", false));
+        setInnerBorderColor(getColor("innerBorderColor", "#111214"));
+        setInnerBorderWidth(getNumber("innerBorderWidth", 1.5, 0.5, 4));
+        setEnableGlow(getBoolean("enableGlow", false));
+        setGlowColor(getColor("glowColor", "#5865F2"));
+        setGlowBlur(getNumber("glowBlur", 8, 2, 20));
+        setEnableShadow(getBoolean("enableShadow", false));
+        setShadowColor(getColor("shadowColor", "#000000"));
+        setShadowOffsetX(getNumber("shadowOffsetX", 2, -10, 10));
+        setShadowOffsetY(getNumber("shadowOffsetY", 4, -10, 10));
+        setShadowBlur(getNumber("shadowBlur", 4, 0, 15));
+        const storedImage = saved.uploadedImage;
+        setUploadedImage(typeof storedImage === "string" && storedImage.startsWith("data:image/") ? storedImage : null);
+        const storedBackgroundImage = saved.backgroundImage;
+        setBackgroundImage(typeof storedBackgroundImage === "string" && storedBackgroundImage.startsWith("data:image/") ? storedBackgroundImage : null);
+        setSaveStatus("Saved design restored");
+      }
+    } catch {
+      setSaveStatus("Could not restore saved design");
+    } finally {
+      setSettingsLoaded(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!settingsLoaded) return;
+    try {
+      window.localStorage.setItem(BUILDER_STORAGE_KEY, persistedSettings);
+      setSaveStatus("Saved on this device");
+    } catch {
+      setSaveStatus("Local save unavailable. Browser storage may be full.");
+    }
+  }, [settingsLoaded, persistedSettings]);
 
   const filteredIcons = ALL_ICONS.filter((item) => 
     item.label.toLowerCase().includes(search.toLowerCase()) ||
@@ -270,6 +432,28 @@ export default function RoleIconBuilder() {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleShapeImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    setShapeImageError("");
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      setShapeImageError("Choose a supported image file.");
+      return;
+    }
+    if (file.size > 2_000_000) {
+      setShapeImageError("Choose an image smaller than 2 MB for local saving.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === "string") setBackgroundImage(reader.result);
+    };
+    reader.onerror = () => setShapeImageError("The image could not be read.");
+    reader.readAsDataURL(file);
   };
 
   const handleDownloadPNG = () => {
@@ -315,18 +499,22 @@ export default function RoleIconBuilder() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", backgroundColor: "#111214", color: "#dbdee1", padding: "1.5rem", display: "flex", flexDirection: "column", alignItems: "center" }}>
+    <div className="role-icon-builder" style={{ minHeight: "100vh", backgroundColor: "#111214", color: "#dbdee1", padding: "1.5rem", display: "flex", flexDirection: "column", alignItems: "center" }}>
       <div style={{ width: "100%", maxWidth: "72rem", display: "flex", flexDirection: "column", gap: "1.5rem" }}>
         <div>
           <h1 style={{ fontSize: "1.5rem", fontWeight: "bold", color: "#ffffff", letterSpacing: "0.025em" }}>Role Icon Builder</h1>
           <p style={{ fontSize: "0.875rem", color: "#949ba4", marginTop: "0.25rem" }}>
             Design custom Discord role icons with full vector gradient support, customizable shapes, and high-resolution PNG export.
           </p>
+          <p aria-live="polite" style={{ display: "flex", alignItems: "center", gap: "0.35rem", fontSize: "0.7rem", color: saveStatus.startsWith("Local save unavailable") || saveStatus.startsWith("Could not") ? "#f0a2ad" : "#949ba4", marginTop: "0.4rem" }}>
+            {saveStatus.startsWith("Local save unavailable") || saveStatus.startsWith("Could not") ? <X size={13} aria-hidden="true" /> : saveStatus.startsWith("Saved") ? <SaveCheck size={14} aria-hidden="true" /> : <Save size={13} aria-hidden="true" />}
+            {saveStatus}
+          </p>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(12, minmax(0, 1fr))", gap: "1.5rem" }}>
-          <div style={{ gridColumn: "span 7 / span 7", backgroundColor: "#1e2024", border: "1px solid #2b2d31", borderRadius: "0.5rem", display: "flex", flexDirection: "column", overflow: "hidden" }}>
-            <div style={{ display: "flex", borderBottom: "1px solid #2b2d31", backgroundColor: "#111214" }}>
+        <div className="role-icon-builder-grid">
+          <div className="role-icon-editor" style={{ backgroundColor: "#1e2024", border: "1px solid #2b2d31", borderRadius: "0.5rem", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+            <div className="role-icon-tabs" style={{ display: "flex", borderBottom: "1px solid #2b2d31", backgroundColor: "#111214" }}>
               {(["icon", "shape", "style", "effects"] as const).map((tab) => (
                 <button
                   key={tab}
@@ -362,7 +550,7 @@ export default function RoleIconBuilder() {
                       <Search size={16} style={{ position: "absolute", left: "0.75rem", top: "0.625rem", color: "#949ba4" }} />
                       <input
                         type="text"
-                        placeholder="Search all icons..."
+                        placeholder="Search icons..."
                         value={search}
                         onChange={(e) => {
                           setSearch(e.target.value);
@@ -388,7 +576,7 @@ export default function RoleIconBuilder() {
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: "0.75rem" }}>
                     <div>
                       <label style={{ fontSize: "0.75rem", fontWeight: 600, color: "#b5bac1", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "0.375rem", display: "flex", alignItems: "center", gap: "0.375rem" }}>
-                        <Type size={14} /> Custom Text
+                        <Type size={14} /> Text
                       </label>
                       <input
                         type="text"
@@ -413,7 +601,7 @@ export default function RoleIconBuilder() {
                     </div>
                     <div>
                       <label style={{ fontSize: "0.75rem", fontWeight: 600, color: "#b5bac1", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "0.375rem", display: "flex", alignItems: "center", gap: "0.375rem" }}>
-                        <ImageIcon size={14} /> Upload Custom Image
+                        <ImageIcon size={14} /> Upload Icon
                       </label>
                       <input
                         type="file"
@@ -472,7 +660,7 @@ export default function RoleIconBuilder() {
                       </div>
                     </div>
 
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(6, minmax(0, 1fr))", gap: "0.5rem", minHeight: "14rem" }}>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(6, minmax(0, 1fr))", gridAutoRows: "3.25rem", alignContent: "start", gap: "0.5rem", minHeight: "14rem" }}>
                       {currentIcons.map((item) => {
                         const IconComponent = item.icon;
                         const isSelected = selectedIcon === item.id && !customText && !uploadedImage;
@@ -509,17 +697,20 @@ export default function RoleIconBuilder() {
 
               {activeTab === "shape" && (
                 <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
-                  <div>
-                    <label style={{ fontSize: "0.75rem", fontWeight: 600, color: "#b5bac1", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "0.5rem", display: "block" }}>
-                      Frame Base Shape
-                    </label>
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: "0.75rem" }}>
+                  <details open>
+                    <summary style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem", color: "#b5bac1", fontSize: "0.75rem", fontWeight: 600, textTransform: "uppercase", cursor: "pointer", listStyle: "none" }}>
+                      Shapes <ChevronDown size={15} />
+                    </summary>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(5.5rem, 1fr))", gap: "0.5rem" }}>
                       {SHAPES.map((s) => (
                         <button
                           key={s.id}
                           onClick={() => setSelectedShape(s.id)}
+                          title={s.label}
+                          aria-label={s.label}
                           style={{
-                            padding: "0.75rem",
+                            minHeight: "5.25rem",
+                            padding: "0.5rem",
                             borderRadius: "0.375rem",
                             border: selectedShape === s.id ? "1px solid #57f287" : "1px solid #2b2d31",
                             backgroundColor: selectedShape === s.id ? "rgba(87, 242, 135, 0.1)" : "#111214",
@@ -527,18 +718,25 @@ export default function RoleIconBuilder() {
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
-                            fontSize: "0.875rem",
+                            fontSize: "0.65rem",
                             fontWeight: 500,
-                            cursor: "pointer"
+                            cursor: "pointer",
+                            gap: "0.35rem"
                           }}
                         >
-                          {s.label}
+                          <svg viewBox="0 0 100 100" width="32" height="32" aria-hidden="true">
+                            {s.path ? <path d={s.path} fill={selectedShape === s.id ? bgColor : "#5865f2"} stroke={selectedShape === s.id && enableBorder ? borderColor : "#949ba4"} strokeWidth="4" /> : <rect x="4" y="4" width="92" height="92" rx={s.id === "rounded-square" ? shapeCornerRadius : s.rx || "0"} fill={selectedShape === s.id ? bgColor : "#5865f2"} stroke={selectedShape === s.id && enableBorder ? borderColor : "#949ba4"} strokeWidth="4" />}
+                          </svg>
                         </button>
                       ))}
                     </div>
-                  </div>
+                  </details>
 
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: "1rem" }}>
+                  <details open>
+                    <summary style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem", color: "#b5bac1", fontSize: "0.75rem", fontWeight: 600, textTransform: "uppercase", cursor: "pointer", listStyle: "none" }}>
+                      Adjustments <ChevronDown size={15} />
+                    </summary>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: "1rem" }}>
                     <div>
                       <label style={{ fontSize: "0.75rem", fontWeight: 600, color: "#b5bac1", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "0.5rem", display: "block" }}>
                         Shape Scale ({shapeScale}%)
@@ -567,8 +765,8 @@ export default function RoleIconBuilder() {
                     </div>
                   </div>
 
-                  {currentShapeObj?.id === "rounded-square" && (
-                    <div>
+                    {currentShapeObj?.id === "rounded-square" && (
+                      <div>
                       <label style={{ fontSize: "0.75rem", fontWeight: 600, color: "#b5bac1", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "0.5rem", display: "block" }}>
                         Corner Roundness ({shapeCornerRadius}px)
                       </label>
@@ -580,22 +778,48 @@ export default function RoleIconBuilder() {
                         onChange={(e) => setShapeCornerRadius(Number(e.target.value))}
                         style={{ width: "100%", accentColor: "#57f287" }}
                       />
-                    </div>
-                  )}
+                      </div>
+                    )}
+                  </details>
+
+                  <div style={{ borderTop: "1px solid #2b2d31", paddingTop: "0.75rem", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                    <label htmlFor="shape-image-upload" style={{ fontSize: "0.75rem", fontWeight: 600, color: "#b5bac1", textTransform: "uppercase" }}>
+                      Shape Image
+                    </label>
+                    <input
+                      id="shape-image-upload"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleShapeImageUpload}
+                      style={{ width: "100%", backgroundColor: "#111214", border: "1px solid #2b2d31", borderRadius: "0.375rem", padding: "0.375rem", color: "#ffffff", fontSize: "0.75rem" }}
+                    />
+                    {backgroundImage && (
+                      <button type="button" onClick={() => { setBackgroundImage(null); setShapeImageError(""); }} style={{ alignSelf: "flex-start", border: "1px solid #2b2d31", borderRadius: "0.25rem", padding: "0.4rem 0.6rem", color: "#dbdee1", backgroundColor: "#111214", fontSize: "0.7rem", cursor: "pointer" }}>
+                        Remove shape image
+                      </button>
+                    )}
+                    {backgroundImage && <span style={{ color: "#949ba4", fontSize: "0.7rem" }}>Background colors and gradients are disabled while the image is used.</span>}
+                    {shapeImageError && <span role="alert" style={{ color: "#f0a2ad", fontSize: "0.7rem" }}>{shapeImageError}</span>}
+                  </div>
                 </div>
               )}
 
               {activeTab === "style" && (
                 <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+                  <details open>
+                    <summary style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem", color: "#b5bac1", fontSize: "0.75rem", fontWeight: 600, textTransform: "uppercase", cursor: "pointer", listStyle: "none" }}>
+                      Colors and Gradients <ChevronDown size={15} />
+                    </summary>
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: "1rem" }}>
                     <div>
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
                         <label style={{ fontSize: "0.75rem", fontWeight: 600, color: "#b5bac1", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                          Background Fill
+                          Background
                         </label>
                         <button 
+                          disabled={Boolean(backgroundImage)}
                           onClick={() => setUseGradientBg(!useGradientBg)} 
-                          style={{ fontSize: "0.65rem", color: "#57f287", background: "none", border: "none", cursor: "pointer" }}
+                          style={{ fontSize: "0.65rem", color: "#57f287", background: "none", border: "none", cursor: backgroundImage ? "not-allowed" : "pointer", opacity: backgroundImage ? 0.5 : 1 }}
                         >
                           {useGradientBg ? "Use Solid Color" : "Enable Gradient"}
                         </button>
@@ -603,6 +827,7 @@ export default function RoleIconBuilder() {
                       <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                         <input
                           type="color"
+                          disabled={Boolean(backgroundImage)}
                           value={bgColor}
                           onChange={(e) => setBgColor(e.target.value)}
                           style={{ width: "2.25rem", height: "2.25rem", backgroundColor: "transparent", borderRadius: "0.25rem", cursor: "pointer", border: "none" }}
@@ -610,6 +835,7 @@ export default function RoleIconBuilder() {
                         {useGradientBg && (
                           <input
                             type="color"
+                            disabled={Boolean(backgroundImage)}
                             value={bgGradientEnd}
                             onChange={(e) => setBgGradientEnd(e.target.value)}
                             style={{ width: "2.25rem", height: "2.25rem", backgroundColor: "transparent", borderRadius: "0.25rem", cursor: "pointer", border: "none" }}
@@ -617,6 +843,7 @@ export default function RoleIconBuilder() {
                         )}
                         <input
                           type="text"
+                          disabled={Boolean(backgroundImage)}
                           value={bgColor}
                           onChange={(e) => setBgColor(e.target.value)}
                           style={{ width: "100%", backgroundColor: "#111214", border: "1px solid #2b2d31", borderRadius: "0.25rem", padding: "0.375rem 0.75rem", fontSize: "0.875rem", color: "#ffffff" }}
@@ -627,6 +854,7 @@ export default function RoleIconBuilder() {
                           <label style={{ fontSize: "0.65rem", color: "#b5bac1" }}>Gradient Angle ({bgGradientAngle}°)</label>
                           <input
                             type="range"
+                            disabled={Boolean(backgroundImage)}
                             min="0"
                             max="360"
                             value={bgGradientAngle}
@@ -686,8 +914,13 @@ export default function RoleIconBuilder() {
                       )}
                     </div>
                   </div>
+                  </details>
 
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: "0.75rem" }}>
+                  <details open>
+                    <summary style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem", color: "#b5bac1", fontSize: "0.75rem", fontWeight: 600, textTransform: "uppercase", cursor: "pointer", listStyle: "none" }}>
+                      Icon and Text <ChevronDown size={15} />
+                    </summary>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: "0.75rem" }}>
                     <div>
                       <label style={{ fontSize: "0.75rem", fontWeight: 600, color: "#b5bac1", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "0.5rem", display: "block" }}>
                         Icon Scale ({iconSize}%)
@@ -744,6 +977,11 @@ export default function RoleIconBuilder() {
                           <option value="sans-serif">Sans-Serif</option>
                           <option value="serif">Serif</option>
                           <option value="monospace">Monospace</option>
+                          <option value="system-ui">System UI</option>
+                          <option value="Georgia, serif">Georgia</option>
+                          <option value="'Courier New', monospace">Courier New</option>
+                          <option value="Impact, sans-serif">Impact</option>
+                          <option value="'Comic Sans MS', cursive">Comic Sans</option>
                           <option value="cursive">Cursive</option>
                         </select>
                       </div>
@@ -763,6 +1001,7 @@ export default function RoleIconBuilder() {
                       </div>
                     </div>
                   )}
+                  </details>
                 </div>
               )}
 
@@ -847,6 +1086,42 @@ export default function RoleIconBuilder() {
                           <option value="dashed">Dashed</option>
                           <option value="dotted">Dotted</option>
                         </select>
+                      </div>
+                    )}
+                  </div>
+
+                  <div style={{ borderTop: "1px solid #2b2d31", paddingTop: "0.75rem" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }}>
+                      <input
+                        type="checkbox"
+                        id="inner-icon-border"
+                        checked={enableInnerBorder}
+                        onChange={(e) => setEnableInnerBorder(e.target.checked)}
+                      />
+                      <label htmlFor="inner-icon-border" style={{ fontSize: "0.75rem", fontWeight: 600, color: "#b5bac1", textTransform: "uppercase" }}>
+                        Inner Icon Border
+                      </label>
+                    </div>
+                    {enableInnerBorder && (
+                      <div style={{ display: "grid", gridTemplateColumns: "2.5rem minmax(0, 1fr) auto", gap: "0.75rem", alignItems: "center" }}>
+                        <input
+                          type="color"
+                          aria-label="Inner icon border color"
+                          value={innerBorderColor}
+                          onChange={(e) => setInnerBorderColor(e.target.value)}
+                          style={{ width: "2rem", height: "2rem", backgroundColor: "transparent", border: "none", cursor: "pointer" }}
+                        />
+                        <input
+                          type="range"
+                          aria-label="Inner icon border width"
+                          min="0.5"
+                          max="4"
+                          step="0.5"
+                          value={innerBorderWidth}
+                          onChange={(e) => setInnerBorderWidth(Number(e.target.value))}
+                          style={{ width: "100%", accentColor: "#57f287" }}
+                        />
+                        <span style={{ minWidth: "2.5rem", color: "#949ba4", fontSize: "0.7rem" }}>{innerBorderWidth}px</span>
                       </div>
                     )}
                   </div>
@@ -947,7 +1222,7 @@ export default function RoleIconBuilder() {
             </div>
           </div>
 
-          <div style={{ gridColumn: "span 5 / span 5", display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+          <div className="role-icon-preview-column" style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
             <div style={{ backgroundColor: "#1e2024", border: "1px solid #2b2d31", borderRadius: "0.5rem", padding: "1.5rem", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", position: "relative", minHeight: "220px" }}>
               <div 
                 style={{
@@ -973,6 +1248,13 @@ export default function RoleIconBuilder() {
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <defs>
+                    <clipPath id="shapeClip" clipPathUnits="userSpaceOnUse">
+                      {currentShapeObj?.path ? (
+                        <path d={currentShapeObj.path} />
+                      ) : (
+                        <rect x="0" y="0" width="100" height="100" rx={currentShapeObj?.id === "rounded-square" ? shapeCornerRadius : currentShapeObj?.rx || "0"} />
+                      )}
+                    </clipPath>
                     <linearGradient 
                       id="bgGrad" 
                       x1={`${Math.cos((bgGradientAngle * Math.PI) / 180) < 0 ? 100 : 0}%`}
@@ -986,10 +1268,23 @@ export default function RoleIconBuilder() {
 
                     <linearGradient 
                       id="iconGrad" 
-                      x1={`${Math.cos((iconGradientAngle * Math.PI) / 180) < 0 ? 100 : 0}%`}
-                      y1={`${Math.sin((iconGradientAngle * Math.PI) / 180) < 0 ? 100 : 0}%`}
-                      x2={`${Math.cos((iconGradientAngle * Math.PI) / 180) >= 0 ? 100 : 0}%`}
-                      y2={`${Math.sin((iconGradientAngle * Math.PI) / 180) >= 0 ? 100 : 0}%`}
+                      gradientUnits="userSpaceOnUse"
+                      x1={12 - Math.cos((iconGradientAngle * Math.PI) / 180) * 12}
+                      y1={12 - Math.sin((iconGradientAngle * Math.PI) / 180) * 12}
+                      x2={12 + Math.cos((iconGradientAngle * Math.PI) / 180) * 12}
+                      y2={12 + Math.sin((iconGradientAngle * Math.PI) / 180) * 12}
+                    >
+                      <stop offset="0%" stopColor={iconColor} />
+                      <stop offset="100%" stopColor={iconGradientEnd} />
+                    </linearGradient>
+
+                    <linearGradient
+                      id="textGrad"
+                      gradientUnits="userSpaceOnUse"
+                      x1={50 - Math.cos((iconGradientAngle * Math.PI) / 180) * 50}
+                      y1={50 - Math.sin((iconGradientAngle * Math.PI) / 180) * 50}
+                      x2={50 + Math.cos((iconGradientAngle * Math.PI) / 180) * 50}
+                      y2={50 + Math.sin((iconGradientAngle * Math.PI) / 180) * 50}
                     >
                       <stop offset="0%" stopColor={iconColor} />
                       <stop offset="100%" stopColor={iconGradientEnd} />
@@ -997,10 +1292,13 @@ export default function RoleIconBuilder() {
                   </defs>
 
                   <g transform={`translate(50, 50) scale(${shapeScale / 100}) rotate(${shapeRotation}) translate(-50, -50)`}>
+                    {backgroundImage && (
+                      <image href={backgroundImage} x="0" y="0" width="100" height="100" preserveAspectRatio="xMidYMid slice" clipPath="url(#shapeClip)" />
+                    )}
                     {currentShapeObj?.path ? (
                       <path 
                         d={currentShapeObj.path} 
-                        fill={useGradientBg ? "url(#bgGrad)" : bgColor}
+                        fill={backgroundImage ? "none" : useGradientBg ? "url(#bgGrad)" : bgColor}
                         stroke={enableBorder ? borderColor : "none"}
                         strokeWidth={enableBorder ? borderWidth : 0}
                         strokeDasharray={getDashArray()}
@@ -1012,7 +1310,7 @@ export default function RoleIconBuilder() {
                         width="100"
                         height="100"
                         rx={currentShapeObj?.id === "rounded-square" ? shapeCornerRadius : currentShapeObj?.rx || "0"}
-                        fill={useGradientBg ? "url(#bgGrad)" : bgColor}
+                        fill={backgroundImage ? "none" : useGradientBg ? "url(#bgGrad)" : bgColor}
                         stroke={enableBorder ? borderColor : "none"}
                         strokeWidth={enableBorder ? borderWidth : 0}
                         strokeDasharray={getDashArray()}
@@ -1039,18 +1337,29 @@ export default function RoleIconBuilder() {
                         y="50%"
                         dominantBaseline="central"
                         textAnchor="middle"
-                        fill={useGradientIcon ? "url(#iconGrad)" : iconColor}
+                        fill={useGradientIcon ? "url(#textGrad)" : iconColor}
                         fontSize={Math.floor(iconSize * 0.5)}
                         fontWeight={fontWeight}
                         fontFamily={fontFamily}
+                        stroke={enableInnerBorder ? innerBorderColor : undefined}
+                        strokeWidth={enableInnerBorder ? innerBorderWidth : undefined}
+                        paintOrder="stroke"
                       >
                         {customText}
                       </text>
                     ) : (
                       <g transform={`translate(${50 - iconSize / 2}, ${50 - iconSize / 2})`}>
+                        {enableInnerBorder && (
+                          <SelectedIconComponent
+                            size={iconSize}
+                            color={innerBorderColor}
+                            strokeWidth={iconStrokeWidth + innerBorderWidth * 2}
+                          />
+                        )}
                         <SelectedIconComponent
                           size={iconSize}
-                          color={useGradientIcon ? "url(#iconGrad)" : iconColor}
+                          color={iconColor}
+                          stroke={useGradientIcon ? "url(#iconGrad)" : iconColor}
                           strokeWidth={iconStrokeWidth}
                         />
                       </g>
@@ -1062,7 +1371,7 @@ export default function RoleIconBuilder() {
 
             <div style={{ backgroundColor: "#1e2024", border: "1px solid #2b2d31", borderRadius: "0.5rem", padding: "1rem", display: "flex", flexDirection: "column", gap: "0.75rem" }}>
               <span style={{ fontSize: "0.75rem", fontWeight: 600, color: "#949ba4", letterSpacing: "0.05em", display: "block" }}>
-                Preview (kinda broken, srry)
+                Discord Preview
               </span>
 
               <div style={{ backgroundColor: "#313338", borderRadius: "0.375rem", padding: "0.75rem", display: "flex", alignItems: "center", gap: "0.75rem", fontFamily: "inherit", fontSize: "0.875rem" }}>
@@ -1073,20 +1382,53 @@ export default function RoleIconBuilder() {
                   <div style={{ display: "flex", alignItems: "center", gap: "0.375rem", lineHeight: 1 }}>
                     <span style={{ fontWeight: 600, color: "#ffffff" }}>Soul</span>
                     <svg viewBox="0 0 100 100" style={{ width: "1rem", height: "1rem", display: "inline-block" }}>
+                      <defs>
+                        <clipPath id="previewShapeClip" clipPathUnits="userSpaceOnUse">
+                          {currentShapeObj?.path ? (
+                            <path d={currentShapeObj.path} />
+                          ) : (
+                            <rect x="0" y="0" width="100" height="100" rx={currentShapeObj?.id === "rounded-square" ? shapeCornerRadius : currentShapeObj?.rx || "0"} />
+                          )}
+                        </clipPath>
+                        <linearGradient
+                          id="previewIconGrad"
+                          gradientUnits="userSpaceOnUse"
+                          x1={12 - Math.cos((iconGradientAngle * Math.PI) / 180) * 12}
+                          y1={12 - Math.sin((iconGradientAngle * Math.PI) / 180) * 12}
+                          x2={12 + Math.cos((iconGradientAngle * Math.PI) / 180) * 12}
+                          y2={12 + Math.sin((iconGradientAngle * Math.PI) / 180) * 12}
+                        >
+                          <stop offset="0%" stopColor={iconColor} />
+                          <stop offset="100%" stopColor={iconGradientEnd} />
+                        </linearGradient>
+                        <linearGradient
+                          id="previewTextGrad"
+                          gradientUnits="userSpaceOnUse"
+                          x1={50 - Math.cos((iconGradientAngle * Math.PI) / 180) * 50}
+                          y1={50 - Math.sin((iconGradientAngle * Math.PI) / 180) * 50}
+                          x2={50 + Math.cos((iconGradientAngle * Math.PI) / 180) * 50}
+                          y2={50 + Math.sin((iconGradientAngle * Math.PI) / 180) * 50}
+                        >
+                          <stop offset="0%" stopColor={iconColor} />
+                          <stop offset="100%" stopColor={iconGradientEnd} />
+                        </linearGradient>
+                      </defs>
+                      {backgroundImage && <image href={backgroundImage} x="0" y="0" width="100" height="100" preserveAspectRatio="xMidYMid slice" clipPath="url(#previewShapeClip)" />}
                       {currentShapeObj?.path ? (
-                        <path d={currentShapeObj.path} fill={bgColor} />
+                        <path d={currentShapeObj.path} fill={backgroundImage ? "none" : bgColor} stroke={enableBorder ? borderColor : "none"} strokeWidth={enableBorder ? borderWidth : 0} strokeDasharray={getDashArray()} />
                       ) : (
-                        <rect x="0" y="0" width="100" height="100" rx={currentShapeObj?.id === "rounded-square" ? shapeCornerRadius : currentShapeObj?.rx || "0"} fill={bgColor} />
+                        <rect x="0" y="0" width="100" height="100" rx={currentShapeObj?.id === "rounded-square" ? shapeCornerRadius : currentShapeObj?.rx || "0"} fill={backgroundImage ? "none" : bgColor} stroke={enableBorder ? borderColor : "none"} strokeWidth={enableBorder ? borderWidth : 0} strokeDasharray={getDashArray()} />
                       )}
                       {uploadedImage ? (
                         <image href={uploadedImage} x="20" y="20" width="60" height="60" />
                       ) : customText ? (
-                        <text x="50%" y="50%" dominantBaseline="central" textAnchor="middle" fill={iconColor} fontSize="40" fontWeight={fontWeight} fontFamily={fontFamily}>
+                        <text x="50%" y="50%" dominantBaseline="central" textAnchor="middle" fill={useGradientIcon ? "url(#previewTextGrad)" : iconColor} fontSize="40" fontWeight={fontWeight} fontFamily={fontFamily} stroke={enableInnerBorder ? innerBorderColor : undefined} strokeWidth={enableInnerBorder ? innerBorderWidth : undefined} paintOrder="stroke">
                           {customText}
                         </text>
                       ) : (
                         <g transform={`translate(${50 - iconSize / 2}, ${50 - iconSize / 2})`}>
-                          <SelectedIconComponent size={iconSize} color={iconColor} strokeWidth={iconStrokeWidth} />
+                          {enableInnerBorder && <SelectedIconComponent size={iconSize} color={innerBorderColor} strokeWidth={iconStrokeWidth + innerBorderWidth * 2} />}
+                          <SelectedIconComponent size={iconSize} color={iconColor} stroke={useGradientIcon ? "url(#previewIconGrad)" : iconColor} strokeWidth={iconStrokeWidth} />
                         </g>
                       )}
                     </svg>
