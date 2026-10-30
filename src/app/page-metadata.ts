@@ -18,13 +18,13 @@ export function createPageMetadata({ title, description, path }: PageMetadataInp
       siteName: "Discapp",
       locale: "en_US",
       type: "website",
-      images: [{ url: "/discapp-mini-nobg.png", width: 1200, height: 630, alt: "Discapp" }],
+      images: [{ url: "/discapp-banner.png", width: 736, height: 411, alt: "Discapp" }],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: ["/discapp-mini-nobg.png"],
+      images: ["/discapp-banner.png"],
     },
   };
 }

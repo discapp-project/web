@@ -37,9 +37,9 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: '/discapp-mini-nobg.png',
-        width: 1200,
-        height: 630,
+        url: "/discapp-banner.png",
+        width: 736,
+        height: 411,
         alt: 'Discapp Thumbnail',
       },
     ],
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: "Discapp | Discord Server Tools and Utilities",
     description: "Practical tools for Discord servers, roles, webhooks, moderation, and community management.",
-    images: ['/discapp-mini-nobg.png'],
+    images: ["/discapp-banner.png"],
   },
 };
 
