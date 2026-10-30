@@ -1,5 +1,5 @@
 import { createPageMetadata } from "../page-metadata";
-import News from "./news";
+import News from "./news-list";
 
 export const metadata = createPageMetadata({ title: "Discapp News and Updates", description: "Read the latest Discapp product announcements, new Discord tools, feature releases, and community updates.", path: "/news" });
 

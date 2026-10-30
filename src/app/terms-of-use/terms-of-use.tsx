@@ -35,7 +35,7 @@ export default function TermsOfUse() {
             Terms of Use
           </h1>
           <p style={{ color: "#80848e", fontSize: "14px", margin: 0 }}>
-            Last updated: 10/16/2026
+            Last updated: 2026-10-30
           </p>
         </div>
 
@@ -80,7 +80,7 @@ export default function TermsOfUse() {
               2. Service Description
             </h2>
             <p style={{ color: "#949ba4", fontSize: "14px", lineHeight: "1.6", margin: 0 }}>
-              discapp.org provides free, client-side, browser-native utility tools designed specifically for Discord developers, server administrators, and bot operators. All services, client scripts, code generators, and visual builders are provided strictly on an "as-is" and "as-available" basis. We reserve the right to alter, enhance, suspend, or restrict access to any aspect of the platform without advance notice or liability.
+              discapp.org provides free utilities for Discord users. Some tools, including image processing and design tools, operate in your browser. Other features, including user lookups, bug reports, and webhook profile, message, and delivery operations, use Discapp API routes and/or third-party services such as Discord and hCaptcha. The tools and their output are provided on an &quot;as-is&quot; and &quot;as-available&quot; basis. We may change, suspend, or discontinue any feature.
             </p>
           </div>
 
@@ -112,7 +112,7 @@ export default function TermsOfUse() {
               4. Acceptable Use & Conduct
             </h2>
             <p style={{ color: "#949ba4", fontSize: "14px", lineHeight: "1.6", margin: 0 }}>
-              You agree to use all tools, form submissions, and site features responsibly and lawfully. You are strictly prohibited from abusing the site infrastructure, overloading servers, scraping data via automated bots, submitting malicious payloads, spamming contact forms, attempting Denial of Service (DoS/DDoS) attacks, or bypassing security mechanisms (including hCaptcha verification challenges).
+              You agree to use the site lawfully and not abuse its infrastructure, scrape it with automated bots, submit malicious payloads, spam forms, attempt denial-of-service attacks, or bypass security controls such as hCaptcha. You must be authorized to submit or use a Discord webhook URL; webhook URLs can act as credentials. You are responsible for having the rights and permissions needed for message content, images, audio, and other files you submit or send. You must comply with Discord&apos;s applicable terms and policies when using Discord features or sending content through Discord.
             </p>
           </div>
 
@@ -176,7 +176,7 @@ export default function TermsOfUse() {
               8. Intellectual Property Rights
             </h2>
             <p style={{ color: "#949ba4", fontSize: "14px", lineHeight: "1.6", margin: 0 }}>
-              All original web page layouts, custom code logic, visual designs, and brand elements unique to discapp.org remain the exclusive intellectual property of the site operators. Discord, the Discord logo, and all associated trademarks, product names, and registered logos are the sole property of Discord Inc.
+              Discapp branding, original site content, and original designs are owned by their respective rights holders and are not granted for reuse by these Terms. The website source code in our public repository is subject to the separate <a href="https://github.com/discapp-project/web/blob/main/LICENCE.md" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>repository license</a>. That license permits viewing and audit, and forks for the purpose of submitting contributions to the project; it does not grant general permission to redistribute, rehost, rebrand, sublicense, or commercially use the code. Components and contributions with separate licenses remain subject to those licenses. Discord names and marks belong to Discord Inc.
             </p>
           </div>
 
@@ -192,7 +192,7 @@ export default function TermsOfUse() {
               9. Third-Party Integrations & Services
             </h2>
             <p style={{ color: "#949ba4", fontSize: "14px", lineHeight: "1.6", margin: 0 }}>
-              This site relies on third-party service providers to maintain reliability and security—specifically Vercel for web hosting and analytics, and hCaptcha for automated spam mitigation. By using discapp.org, you acknowledge that your interactions with these embedded components are subject to the respective terms of service and privacy policies of those third-party providers.
+              Discapp uses Vercel for hosting, hCaptcha for bot prevention on selected features, and Discord services for lookups and webhook operations. The current app code does not include Vercel Analytics. Your use of those features may involve sending information to the relevant provider, which processes it under its own terms and privacy policy: <a href="https://vercel.com/legal/terms" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>Vercel Terms</a>, <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>Vercel Privacy Policy</a>, <a href="https://www.hcaptcha.com/terms" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>hCaptcha Terms</a>, <a href="https://www.hcaptcha.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>hCaptcha Privacy Policy</a>, <a href="https://discord.com/terms" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>Discord Terms</a>, and <a href="https://discord.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>Discord Privacy Policy</a>.
             </p>
           </div>
 
@@ -208,7 +208,7 @@ export default function TermsOfUse() {
               10. Modifications & Service Discontinuation
             </h2>
             <p style={{ color: "#949ba4", fontSize: "14px", lineHeight: "1.6", margin: 0 }}>
-              We reserve the right to update, revise, or modify these Terms of Use at any time without prior notice. Any updates will be reflected directly on this page with a revised "Last updated" date. We also reserve the right to temporarily or permanently suspend, migrate, or discontinue any tool or feature at our sole discretion.
+              We may update these Terms of Use from time to time. Updates will be reflected on this page with a revised &quot;Last updated&quot; date. We may temporarily or permanently suspend, migrate, or discontinue any tool or feature.
             </p>
           </div>
 

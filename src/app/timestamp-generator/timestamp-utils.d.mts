@@ -1,0 +1,1 @@
+export function formatRelativeTime(date: Date, now?: Date): string;

@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
+import { readLimitedBody, RequestBodyTooLargeError } from "../../read-limited-body";
 
 export const dynamic = "force-dynamic";
 
-const maxRequestBytes = 24 * 1024 * 1024;
+const maxJsonBodyBytes = 128 * 1024;
 const webhookPathPattern = /^\/api\/webhooks\/\d{17,20}\/[A-Za-z0-9._-]+$/;
 const allowedHosts = new Set(["discord.com", "discordapp.com"]);
 const messagePathPattern = /^\/channels\/(?:\d{17,20}|@me)\/\d{17,20}\/(\d{17,20})$/;
@@ -14,7 +15,6 @@ type IncomingRequest = {
   webhookUrl: unknown;
   threadId: unknown;
   payload: unknown;
-  files: File[];
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -44,11 +44,7 @@ function isHttpUrl(value: unknown) {
   }
 }
 
-function safeFilename(file: File) {
-  return file.name.split(/[\\/]/).pop()?.replace(/[\r\n\0]/g, "_").slice(0, 100) || "attachment";
-}
-
-function validateEmbeds(value: unknown, fileNames: Set<string>) {
+function validateEmbeds(value: unknown) {
   if (value === undefined) return null;
   if (!Array.isArray(value) || value.length > 10) return "A message can contain up to 10 embeds.";
 
@@ -83,8 +79,7 @@ function validateEmbeds(value: unknown, fileNames: Set<string>) {
       const media = embed[key];
       if (media === undefined) continue;
       if (!isRecord(media) || typeof media.url !== "string") return `Embed ${index + 1} has invalid ${key} data.`;
-      const isUploadedFile = media.url.startsWith("attachment://") && fileNames.has(media.url.slice("attachment://".length));
-      if (!isHttpUrl(media.url) && !isUploadedFile) return `Embed ${index + 1} has an invalid ${key} URL.`;
+      if (!isHttpUrl(media.url)) return `Embed ${index + 1} has an invalid ${key} URL.`;
     }
 
     if (embed.fields !== undefined) {
@@ -198,7 +193,7 @@ function validateComponents(value: unknown) {
   return null;
 }
 
-function validatePayload(payload: unknown, files: File[]) {
+function validatePayload(payload: unknown) {
   if (!isRecord(payload)) return "Message payload must be an object.";
   const allowedKeys = new Set(["content", "username", "avatar_url", "tts", "embeds", "allowed_mentions", "flags", "components", "thread_name", "applied_tags"]);
   if (Object.keys(payload).some((key) => !allowedKeys.has(key))) return "Message payload contains unsupported fields.";
@@ -228,50 +223,33 @@ function validatePayload(payload: unknown, files: File[]) {
     return "Components must use the Components V2 message flag.";
   }
 
-  const fileNames = new Set(files.map(safeFilename));
-  const embedError = validateEmbeds(payload.embeds, fileNames);
+  const embedError = validateEmbeds(payload.embeds);
   if (embedError) return embedError;
 
   const hasContent = typeof payload.content === "string" && payload.content.trim().length > 0;
   const hasEmbeds = Array.isArray(payload.embeds) && payload.embeds.length > 0;
-  return !isComponentsV2 && !hasContent && !hasEmbeds && files.length === 0 ? "Add message text, an embed, or an attachment before sending." : null;
+  return !isComponentsV2 && !hasContent && !hasEmbeds ? "Add message text, an embed, or an attachment before sending." : null;
 }
 
 async function parseIncomingRequest(request: Request): Promise<IncomingRequest> {
-  const contentType = request.headers.get("content-type") ?? "";
-  if (contentType.includes("multipart/form-data")) {
-    const form = await request.formData();
-    const payloadText = form.get("payload");
-    if (typeof payloadText !== "string") throw new Error("Invalid payload.");
-    const fileParts = form.getAll("files");
-    if (fileParts.some((part) => !(part instanceof File))) throw new Error("Invalid attachments.");
-    return {
-      webhookUrl: form.get("webhookUrl"),
-      threadId: form.get("threadId"),
-      payload: JSON.parse(payloadText) as unknown,
-      files: fileParts as File[],
-    };
-  }
-
-  const text = await request.text();
-  if (new TextEncoder().encode(text).byteLength > 128 * 1024) throw new Error("Request is too large.");
+  const text = await readLimitedBody(request, maxJsonBodyBytes);
   const parsed: unknown = JSON.parse(text);
   if (!isRecord(parsed)) throw new Error("Request body must be an object.");
-  return { webhookUrl: parsed.webhookUrl, threadId: parsed.threadId, payload: parsed.payload, files: [] };
+  return { webhookUrl: parsed.webhookUrl, threadId: parsed.threadId, payload: parsed.payload };
 }
 
 export async function POST(request: Request) {
   const contentLength = Number(request.headers.get("content-length") ?? 0);
-  if (Number.isFinite(contentLength) && contentLength > maxRequestBytes) {
-    return NextResponse.json({ message: "Request is too large. Keep total attachments under 24 MB." }, { status: 413 });
+  if (Number.isFinite(contentLength) && contentLength > maxJsonBodyBytes) {
+    return NextResponse.json({ message: "Request is too large. Keep the webhook payload under 128 KB." }, { status: 413 });
   }
 
   let body: IncomingRequest;
   try {
     body = await parseIncomingRequest(request);
   } catch (error) {
-    const isTooLarge = error instanceof Error && error.message === "Request is too large.";
-    return NextResponse.json({ message: isTooLarge ? error.message : "Request body is invalid." }, { status: isTooLarge ? 413 : 400 });
+    const isTooLarge = error instanceof RequestBodyTooLargeError;
+    return NextResponse.json({ message: isTooLarge ? "Request is too large." : "Request body is invalid." }, { status: isTooLarge ? 413 : 400 });
   }
 
   const webhookUrl = parseWebhookUrl(body.webhookUrl);
@@ -279,42 +257,19 @@ export async function POST(request: Request) {
   if (body.threadId !== undefined && body.threadId !== "" && (typeof body.threadId !== "string" || !/^\d{17,20}$/.test(body.threadId))) {
     return NextResponse.json({ message: "Thread ID must be a 17–20 digit Discord ID." }, { status: 400 });
   }
-  if (body.files.length > 10) return NextResponse.json({ message: "Attach up to 10 files." }, { status: 413 });
-  if (body.files.reduce((total, file) => total + file.size, 0) > maxRequestBytes) {
-    return NextResponse.json({ message: "Keep total attachments under 24 MB." }, { status: 413 });
-  }
-
-  const payloadError = validatePayload(body.payload, body.files);
+  const payloadError = validatePayload(body.payload);
   if (payloadError) return NextResponse.json({ message: payloadError }, { status: 400 });
 
-  webhookUrl.searchParams.set("wait", "true");
   if (isRecord(body.payload) && typeof body.payload.flags === "number" && (body.payload.flags & componentsV2Flag) !== 0) {
     webhookUrl.searchParams.set("with_components", "true");
   }
   if (typeof body.threadId === "string" && body.threadId) webhookUrl.searchParams.set("thread_id", body.threadId);
 
-  const hasFiles = body.files.length > 0;
-  let outgoingBody: BodyInit;
-  let headers: HeadersInit | undefined;
-  if (hasFiles) {
-    const form = new FormData();
-    const payload = body.payload as Record<string, unknown>;
-    form.set("payload_json", JSON.stringify({
-      ...payload,
-      attachments: body.files.map((file, index) => ({ id: String(index), filename: safeFilename(file) })),
-    }));
-    body.files.forEach((file, index) => form.append(`files[${index}]`, file, safeFilename(file)));
-    outgoingBody = form;
-  } else {
-    outgoingBody = JSON.stringify(body.payload);
-    headers = { "content-type": "application/json" };
-  }
-
   try {
     const discordResponse = await fetch(webhookUrl, {
       method: "POST",
-      headers,
-      body: outgoingBody,
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(body.payload),
       cache: "no-store",
       redirect: "error",
       signal: AbortSignal.timeout(20_000),
@@ -344,13 +299,11 @@ export async function POST(request: Request) {
 export async function PATCH(request: Request) {
   let body: unknown;
   try {
-    const text = await request.text();
-    if (new TextEncoder().encode(text).byteLength > 128 * 1024) {
-      return NextResponse.json({ message: "Request is too large." }, { status: 413 });
-    }
+    const text = await readLimitedBody(request, maxJsonBodyBytes);
     body = JSON.parse(text) as unknown;
-  } catch {
-    return NextResponse.json({ message: "Request body is invalid." }, { status: 400 });
+  } catch (error) {
+    const isTooLarge = error instanceof RequestBodyTooLargeError;
+    return NextResponse.json({ message: isTooLarge ? "Request is too large." : "Request body is invalid." }, { status: isTooLarge ? 413 : 400 });
   }
   if (!isRecord(body)) return NextResponse.json({ message: "Request body must be an object." }, { status: 400 });
 
@@ -376,7 +329,7 @@ export async function PATCH(request: Request) {
   }
   if (!messageId) return NextResponse.json({ message: "Enter a valid Discord message link." }, { status: 400 });
 
-  const payloadError = validatePayload(body.payload, []);
+  const payloadError = validatePayload(body.payload);
   if (payloadError) return NextResponse.json({ message: payloadError }, { status: 400 });
 
   webhookUrl.pathname = `${webhookUrl.pathname}/messages/${messageId}`;

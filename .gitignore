@@ -11,6 +11,7 @@
 # next.js
 /.next/
 /out/
+/.vercel/
 
 # debug
 npm-debug.log*
@@ -22,8 +23,16 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Main
-.env
+# local environment files
+/.env*
+!/.env.example
+
+# test output
+/coverage/
+
+# operating system files
+.DS_Store
+Thumbs.db
 
 # Auto-generated
 AGENTS.md

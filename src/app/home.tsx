@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowUpRight, Webhook, Library, BadgePlus, UserSearch, Link2, Newspaper, Search, Package, Snowflake, Palette, PencilLine, ArrowDownWideNarrow, FileMusic, Scaling, Calculator, CalendarDays, TypeOutline, Space, KeyRound, BrickWallShield, Regex, Puzzle, Braces, Baseline, BookText, ListSortDescending } from 'lucide-react';
+import { useSyncExternalStore } from 'react';
+import { ArrowUpRight, Webhook, Library, BadgePlus, UserSearch, Link2, Newspaper, Search, Package, Snowflake, Palette, PencilLine, ArrowDownWideNarrow, FileMusic, Scaling, Calculator, CalendarDays, TypeOutline, Space, KeyRound, BrickWallShield, Regex, Puzzle, Braces, Baseline, BookText } from 'lucide-react';
 import { ServerSearch } from './components/icons/ServerSearch';
 
 const officialPages = [
@@ -209,29 +209,30 @@ const tools = [
   }
 ];
 
+const categories = [...new Set(tools.map((tool) => tool.category))].sort((a, b) =>
+  a.localeCompare(b)
+);
+
+function subscribeToLocation(onChange: () => void) {
+  window.addEventListener('popstate', onChange);
+  return () => window.removeEventListener('popstate', onChange);
+}
+
+function getLocationSearch() {
+  return window.location.search;
+}
+
+function getServerLocationSearch() {
+  return '';
+}
+
 export default function Home() {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('All categories');
-  const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState(false);
-  const categoryControlRef = useRef<HTMLDivElement>(null);
-  const categoryButtonRef = useRef<HTMLButtonElement>(null);
+  const search = useSyncExternalStore(subscribeToLocation, getLocationSearch, getServerLocationSearch);
+  const searchParams = new URLSearchParams(search);
+  const searchQuery = searchParams.get('q') ?? '';
+  const selectedCategory = searchParams.get('category') ?? '';
   const query = searchQuery.trim().toLowerCase();
-  const categories = [...new Set(tools.map((tool) => tool.category))].sort((a, b) =>
-    a.localeCompare(b)
-  );
-
-  useEffect(() => {
-    if (!isCategoryMenuOpen) return;
-
-    const closeOnOutsideClick = (event: PointerEvent) => {
-      if (!categoryControlRef.current?.contains(event.target as Node)) {
-        setIsCategoryMenuOpen(false);
-      }
-    };
-
-    document.addEventListener('pointerdown', closeOnOutsideClick);
-    return () => document.removeEventListener('pointerdown', closeOnOutsideClick);
-  }, [isCategoryMenuOpen]);
+  const activeCategory = categories.includes(selectedCategory) ? selectedCategory : '';
 
   const filteredTools = tools.filter((tool) => {
     const matchesSearch =
@@ -239,8 +240,7 @@ export default function Home() {
       tool.title.toLowerCase().includes(query) ||
       tool.description.toLowerCase().includes(query) ||
       tool.category.toLowerCase().includes(query);
-    const matchesCategory =
-      selectedCategory === 'All categories' || tool.category === selectedCategory;
+    const matchesCategory = !activeCategory || tool.category === activeCategory;
     return matchesSearch && matchesCategory;
   });
   return (
@@ -249,67 +249,27 @@ export default function Home() {
         <p className="page-kicker">Discapp Toolkit</p>
         <h1>Find easy to use tools for your Discord server!</h1>
         
-        <div className="directory-filters">
+        <form className="directory-filters" action="/" method="get" role="search">
           <label className="directory-search">
             <Search className="directory-search-icon" size={16} aria-hidden="true" />
             <span className="sr-only">Search tools by name, description, or category</span>
             <input
               type="search"
-              value={searchQuery}
-              onChange={(event) => setSearchQuery(event.target.value)}
+              name="q"
+              key={search}
+              defaultValue={searchQuery}
               placeholder="Search tools by name or description..."
             />
           </label>
-          <div
-            className="directory-category-control"
-            ref={categoryControlRef}
-            onKeyDown={(event) => {
-              if (event.key === 'Escape' && isCategoryMenuOpen) {
-                setIsCategoryMenuOpen(false);
-                categoryButtonRef.current?.focus();
-              }
-            }}
-          >
-            <button
-              ref={categoryButtonRef}
-              className="directory-category-button"
-              type="button"
-              aria-label={`Filter tools by category. Selected: ${selectedCategory}`}
-              aria-haspopup="menu"
-              aria-expanded={isCategoryMenuOpen}
-              aria-controls="directory-category-menu"
-              title={`Category: ${selectedCategory}`}
-              onClick={() => setIsCategoryMenuOpen((isOpen) => !isOpen)}
-            >
-              <ListSortDescending size={20} aria-hidden="true" />
-            </button>
-            {isCategoryMenuOpen && (
-              <div
-                className="directory-category-menu"
-                id="directory-category-menu"
-                role="menu"
-                aria-label="Filter tools by category"
-              >
-                {['All categories', ...categories].map((category) => (
-                  <button
-                    className="directory-category-option"
-                    key={category}
-                    type="button"
-                    role="menuitemradio"
-                    aria-checked={selectedCategory === category}
-                    onClick={() => {
-                      setSelectedCategory(category);
-                      setIsCategoryMenuOpen(false);
-                      categoryButtonRef.current?.focus();
-                    }}
-                  >
-                    {category}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
+          <label className="directory-category-control">
+            <span className="sr-only">Filter by category</span>
+            <select name="category" key={search} defaultValue={activeCategory}>
+              <option value="">All categories</option>
+              {categories.map((category) => <option key={category} value={category}>{category}</option>)}
+            </select>
+          </label>
+          <button className="directory-submit" type="submit">Filter</button>
+        </form>
       </header>
 
       {!query && (
@@ -336,9 +296,9 @@ export default function Home() {
       )}
 
       <section>
-        {!query && (
-          <p className="page-kicker" style={{ marginBottom: '12px', fontSize: '11px', fontWeight: '700', color: '#80848e' }}>Active Tools</p>
-        )}
+        <p className="page-kicker directory-results-count" aria-live="polite">
+          {query || activeCategory ? `${filteredTools.length} matching tools` : 'Active Tools'}
+        </p>
         {filteredTools.length > 0 ? (
           filteredTools.map((tool) => {
             const IconComponent = tool.icon;
@@ -356,7 +316,7 @@ export default function Home() {
             );
           })
         ) : (
-          <div style={{ padding: '24px 0', color: '#80848e', fontSize: '14px' }}>
+          <div className="empty-state" role="status">
             No tools found matching &quot;{searchQuery}&quot;.
           </div>
         )}

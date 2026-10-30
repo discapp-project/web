@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
+import { readLimitedBody, RequestBodyTooLargeError } from "../../read-limited-body";
 
 export const dynamic = "force-dynamic";
 
 const allowedHosts = new Set(["discord.com", "discordapp.com"]);
 const webhookPathPattern = /^\/api\/webhooks\/(\d{17,20})\/[A-Za-z0-9._-]+$/;
 const messagePathPattern = /^\/channels\/(?:\d{17,20}|@me)\/\d{17,20}\/(\d{17,20})$/;
+const maxRequestBodyBytes = 16 * 1024;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -159,13 +161,11 @@ async function discordError(response: Response) {
 export async function POST(request: Request) {
   let body: unknown;
   try {
-    const text = await request.text();
-    if (new TextEncoder().encode(text).byteLength > 16 * 1024) {
-      return NextResponse.json({ message: "Request is too large." }, { status: 413 });
-    }
+    const text = await readLimitedBody(request, maxRequestBodyBytes);
     body = JSON.parse(text) as unknown;
-  } catch {
-    return NextResponse.json({ message: "Request body is invalid." }, { status: 400 });
+  } catch (error) {
+    const isTooLarge = error instanceof RequestBodyTooLargeError;
+    return NextResponse.json({ message: isTooLarge ? "Request is too large." : "Request body is invalid." }, { status: isTooLarge ? 413 : 400 });
   }
 
   if (!isRecord(body)) return NextResponse.json({ message: "Request body must be an object." }, { status: 400 });

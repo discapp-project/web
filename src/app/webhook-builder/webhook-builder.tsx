@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   AlertCircle,
   Check,
@@ -473,6 +473,7 @@ export default function DiscordStudioWorkspace() {
   const [webhookUrl, setWebhookUrl] = useState("");
   const [webhookProfile, setWebhookProfile] = useState<{ webhookUrl: string; username: string; avatarUrl: string } | null>(null);
   const [profileError, setProfileError] = useState<{ webhookUrl: string; message: string } | null>(null);
+  const webhookProfileCache = useRef(new Map<string, { username: string; avatarUrl: string; cachedAt: number }>());
   const [messageUrl, setMessageUrl] = useState("");
   const [isLoadingMessage, setIsLoadingMessage] = useState(false);
   const [isEditingMessage, setIsEditingMessage] = useState(false);
@@ -1106,6 +1107,13 @@ export default function DiscordStudioWorkspace() {
     const trimmedUrl = webhookUrl.trim();
     if (!trimmedUrl) return;
 
+    const cachedProfile = webhookProfileCache.current.get(trimmedUrl);
+    if (cachedProfile && Date.now() - cachedProfile.cachedAt < 5 * 60 * 1000) {
+      setWebhookProfile({ webhookUrl: trimmedUrl, username: cachedProfile.username, avatarUrl: cachedProfile.avatarUrl });
+      setProfileError(null);
+      return;
+    }
+
     const controller = new AbortController();
     const timeout = window.setTimeout(async () => {
       try {
@@ -1131,6 +1139,11 @@ export default function DiscordStudioWorkspace() {
           setProfileError({ webhookUrl: trimmedUrl, message });
           return;
         }
+        webhookProfileCache.current.set(trimmedUrl, {
+          username: result.username,
+          avatarUrl: result.avatarUrl,
+          cachedAt: Date.now(),
+        });
         setWebhookProfile({ webhookUrl: trimmedUrl, username: result.username, avatarUrl: result.avatarUrl });
       } catch {
         if (!controller.signal.aborted) {

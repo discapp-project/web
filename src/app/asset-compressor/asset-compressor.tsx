@@ -1,7 +1,9 @@
 "use client";
 
-import React, { useState, useRef, ChangeEvent } from "react";
-import { Upload, Download, Sparkles, Image as ImageIcon } from "lucide-react";
+import React, { useEffect, useState, useRef, ChangeEvent } from "react";
+import NextImage from "next/image";
+import { Upload, Download, Sparkles } from "lucide-react";
+import { compressToLimit } from "./compression.mjs";
 
 export default function EmojiStickerCompressor() {
   const [file, setFile] = useState<File | null>(null);
@@ -13,8 +15,14 @@ export default function EmojiStickerCompressor() {
   const [originalSize, setOriginalSize] = useState<number>(0);
   const [compressedSize, setCompressedSize] = useState<number>(0);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const [processingError, setProcessingError] = useState("");
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  useEffect(() => () => {
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    if (compressedUrl) URL.revokeObjectURL(compressedUrl);
+  }, [previewUrl, compressedUrl]);
 
   const maxSizeBytes = targetType === "emoji" ? 256 * 1024 : 500 * 1024;
   const maxDimensions = targetType === "emoji" ? 128 : 320;
@@ -29,64 +37,75 @@ export default function EmojiStickerCompressor() {
     setCompressedUrl(null);
     setCompressedBlob(null);
     setCompressedSize(0);
+    setProcessingError("");
+  };
+
+  const changeTargetType = (type: "emoji" | "sticker") => {
+    setTargetType(type);
+    setCompressedUrl(null);
+    setCompressedBlob(null);
+    setCompressedSize(0);
+    setProcessingError("");
   };
 
   const processImage = () => {
     if (!file) return;
     setIsProcessing(true);
+    setProcessingError("");
 
     const img = new Image();
-    img.src = URL.createObjectURL(file);
-
-    img.onload = () => {
-      let width = img.width;
-      let height = img.height;
-
-      if (width > height) {
-        if (width > maxDimensions) {
-          height = Math.round((height * maxDimensions) / width);
-          width = maxDimensions;
-        }
-      } else {
-        if (height > maxDimensions) {
-          width = Math.round((width * maxDimensions) / height);
-          height = maxDimensions;
-        }
-      }
-
+    const sourceUrl = URL.createObjectURL(file);
+    img.onload = async () => {
+      URL.revokeObjectURL(sourceUrl);
       const canvas = canvasRef.current;
       if (!canvas) {
         setIsProcessing(false);
         return;
       }
 
-      canvas.width = width;
-      canvas.height = height;
-
-      const ctx = canvas.getContext("2d");
-      if (!ctx) {
-        setIsProcessing(false);
-        return;
-      }
-
-      ctx.clearRect(0, 0, width, height);
-      ctx.drawImage(img, 0, 0, width, height);
-
+      const dimensionScale = Math.min(1, maxDimensions / Math.max(img.width, img.height));
+      const baseWidth = Math.max(1, Math.round(img.width * dimensionScale));
+      const baseHeight = Math.max(1, Math.round(img.height * dimensionScale));
       const mimeType = targetType === "sticker" && file.type === "image/png" ? "image/png" : "image/webp";
 
-      canvas.toBlob(
-        (blob) => {
-          if (blob) {
-            setCompressedBlob(blob);
-            setCompressedSize(blob.size);
-            setCompressedUrl(URL.createObjectURL(blob));
+      try {
+        const result = await compressToLimit((attemptQuality, scale) => new Promise<Blob | null>((resolve) => {
+          const width = Math.max(1, Math.round(baseWidth * scale));
+          const height = Math.max(1, Math.round(baseHeight * scale));
+          canvas.width = width;
+          canvas.height = height;
+          const context = canvas.getContext("2d");
+          if (!context) {
+            resolve(null);
+            return;
           }
-          setIsProcessing(false);
-        },
-        mimeType,
-        quality
-      );
+          context.clearRect(0, 0, width, height);
+          context.drawImage(img, 0, 0, width, height);
+          canvas.toBlob(resolve, mimeType, attemptQuality);
+        }), maxSizeBytes, quality);
+
+        if (!result.blob) {
+          setCompressedBlob(null);
+          setCompressedUrl(null);
+          setCompressedSize(0);
+          setProcessingError("This image could not be reduced below the selected Discord size limit. Try another image.");
+        } else {
+          setCompressedBlob(result.blob);
+          setCompressedSize(result.blob.size);
+          setCompressedUrl(URL.createObjectURL(result.blob));
+        }
+      } catch {
+        setProcessingError("This image could not be processed. Try a different file format or image.");
+      } finally {
+        setIsProcessing(false);
+      }
     };
+    img.onerror = () => {
+      URL.revokeObjectURL(sourceUrl);
+      setProcessingError("This image could not be opened. Try a different file.");
+      setIsProcessing(false);
+    };
+    img.src = sourceUrl;
   };
 
   const downloadFile = () => {
@@ -105,153 +124,114 @@ export default function EmojiStickerCompressor() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", backgroundColor: "#111214", color: "#f2f3f5", fontFamily: "inherit", padding: "40px 24px" }}>
-      <div style={{ maxWidth: "896px", margin: "0 auto" }}>
-        
-        <div style={{ marginBottom: "32px" }}>
-          <h1 style={{ fontSize: "32px", fontWeight: "700", letterSpacing: "-0.025em", color: "#ffffff", marginBottom: "8px" }}>
+    <main className="tool-page compressor-page">
+      <header className="tool-page-heading">
+          <h1>
             Emoji & Sticker Compressor
           </h1>
-          <p style={{ color: "#949ba4", fontSize: "14px", lineHeight: "1.5" }}>
+          <p>
             Resize and optimize assets to fit Discord&apos;s strict upload limits.
           </p>
-        </div>
+      </header>
 
-        <div style={{ backgroundColor: "#111214", border: "1px solid #1e1f22", borderRadius: "12px", padding: "24px" }}>
+      <section className="tool-panel compressor-panel" aria-label="Image compression settings">
           
-          <div style={{ display: "inline-flex", backgroundColor: "#1e1f22", borderRadius: "8px", padding: "4px", marginBottom: "24px" }}>
+          <div className="tool-segmented-control" role="group" aria-label="Asset type">
             <button
-              onClick={() => setTargetType("emoji")}
-              style={{
-                padding: "8px 16px",
-                borderRadius: "6px",
-                border: "none",
-                cursor: "pointer",
-                fontSize: "13px",
-                fontWeight: "500",
-                transition: "all 0.15s ease",
-                backgroundColor: targetType === "emoji" ? "#2b2d31" : "transparent",
-                color: targetType === "emoji" ? "#ffffff" : "#949ba4",
-                boxShadow: targetType === "emoji" ? "0 1px 2px rgba(0,0,0,0.2)" : "none",
-              }}
+              className={`tool-segment-button${targetType === "emoji" ? " is-active" : ""}`}
+              onClick={() => changeTargetType("emoji")}
+              aria-pressed={targetType === "emoji"}
+              type="button"
             >
               Emoji (256 KB / 128x128)
             </button>
             <button
-              onClick={() => setTargetType("sticker")}
-              style={{
-                padding: "8px 16px",
-                borderRadius: "6px",
-                border: "none",
-                cursor: "pointer",
-                fontSize: "13px",
-                fontWeight: "500",
-                transition: "all 0.15s ease",
-                backgroundColor: targetType === "sticker" ? "#2b2d31" : "transparent",
-                color: targetType === "sticker" ? "#ffffff" : "#949ba4",
-                boxShadow: targetType === "sticker" ? "0 1px 2px rgba(0,0,0,0.2)" : "none",
-              }}
+              className={`tool-segment-button${targetType === "sticker" ? " is-active" : ""}`}
+              onClick={() => changeTargetType("sticker")}
+              aria-pressed={targetType === "sticker"}
+              type="button"
             >
               Sticker (500 KB / 320x320)
             </button>
           </div>
 
-          <div style={{ position: "relative", marginBottom: "24px" }}>
+          <div className="compressor-upload">
             <input
+              className="compressor-file-input"
               type="file"
               accept="image/png, image/jpeg, image/webp"
               onChange={handleFileChange}
               id="file-upload"
-              style={{ position: "absolute", opacity: 0, width: "100%", height: "100%", cursor: "pointer", zIndex: 10 }}
             />
             <label
+              className="compressor-file-label"
               htmlFor="file-upload"
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                padding: "32px 16px",
-                border: "1px dashed #2b2d31",
-                borderRadius: "8px",
-                backgroundColor: "#16181b",
-                cursor: "pointer",
-                transition: "border-color 0.15s ease",
-              }}
             >
-              <Upload style={{ width: "24px", height: "24px", color: "#949ba4", marginBottom: "12px" }} />
-              <span style={{ fontSize: "14px", fontWeight: "500", color: "#dbdee1" }}>
+              <Upload className="compressor-upload-icon" aria-hidden="true" />
+              <span className="compressor-upload-name">
                 {file ? file.name : "Choose an image or drop it here"}
               </span>
-              <span style={{ fontSize: "12px", color: "#80848e", marginTop: "4px" }}>
+              <span className="compressor-upload-hint">
                 Supports PNG, JPEG, or WEBP
               </span>
             </label>
           </div>
 
           {file && (
-            <div style={{ backgroundColor: "#16181b", border: "1px solid #1e1f22", borderRadius: "8px", padding: "16px", marginBottom: "24px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
-                <label style={{ fontSize: "13px", fontWeight: "500", color: "#b5bac1" }}>
+            <div className="compressor-settings">
+              <div className="compressor-quality-heading">
+                <label htmlFor="compression-quality">
                   Compression Level
                 </label>
-                <span style={{ fontSize: "13px", fontFamily: "monospace", color: "#acf6c8" }}>
+                <span>
                   {Math.round(quality * 100)}%
                 </span>
               </div>
               <input
+                id="compression-quality"
                 type="range"
                 min="0.1"
                 max="1"
                 step="0.05"
                 value={quality}
-                onChange={(e) => setQuality(parseFloat(e.target.value))}
-                style={{
-                  width: "100%",
-                  accentColor: "#acf6c8",
-                  cursor: "pointer",
-                  marginBottom: "16px",
+                onChange={(e) => {
+                  setQuality(parseFloat(e.target.value));
+                  setCompressedUrl(null);
+                  setCompressedBlob(null);
+                  setCompressedSize(0);
                 }}
+                className="compressor-quality-range"
               />
               <button
                 onClick={processImage}
                 disabled={isProcessing}
-                style={{
-                  width: "100%",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "8px",
-                  padding: "10px 16px",
-                  backgroundColor: "#acf6c8",
-                  color: "#000000",
-                  fontWeight: "600",
-                  fontSize: "14px",
-                  border: "none",
-                  borderRadius: "6px",
-                  cursor: isProcessing ? "not-allowed" : "pointer",
-                  opacity: isProcessing ? 0.7 : 1,
-                  transition: "opacity 0.15s ease",
-                }}
+                className="tool-button tool-button-primary compressor-action"
               >
-                <Sparkles style={{ width: "16px", height: "16px" }} />
+                <Sparkles size={16} aria-hidden="true" />
                 {isProcessing ? "Processing..." : "Compress"}
               </button>
             </div>
           )}
 
+          {processingError && (
+            <p className="compressor-error" role="status">{processingError}</p>
+          )}
+
           {(previewUrl || compressedUrl) && (
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 280px), 1fr))", gap: "16px" }}>
+            <div className="compressor-results">
               
               {previewUrl && (
-                <div style={{ backgroundColor: "#16181b", border: "1px solid #1e1f22", borderRadius: "8px", padding: "16px" }}>
-                  <div style={{ fontSize: "12px", fontWeight: "600", textTransform: "uppercase", letterSpacing: "0.05em", color: "#80848e", marginBottom: "12px" }}>
+                <div className="compressor-result">
+                  <div className="compressor-result-title">
                     Original
                   </div>
-                  <div style={{ height: "160px", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "#0b0c0e", borderRadius: "6px", border: "1px solid #1e1f22", marginBottom: "12px" }}>
-                    <img
+                  <div className="compressor-image-preview">
+                    <NextImage
                       src={previewUrl}
                       alt="Original"
+                      width={320}
+                      height={320}
+                      unoptimized
                       style={{
                         maxWidth: targetType === "emoji" ? "128px" : "160px",
                         maxHeight: targetType === "emoji" ? "128px" : "160px",
@@ -259,22 +239,25 @@ export default function EmojiStickerCompressor() {
                       }}
                     />
                   </div>
-                  <div style={{ fontSize: "13px", color: "#b5bac1", display: "flex", justifyContent: "space-between" }}>
+                  <div className="compressor-output-size">
                     <span>File Size:</span>
-                    <span style={{ fontFamily: "monospace", color: "#ffffff" }}>{formatSize(originalSize)}</span>
+                    <span>{formatSize(originalSize)}</span>
                   </div>
                 </div>
               )}
 
               {compressedUrl && (
-                <div style={{ backgroundColor: "#16181b", border: "1px solid #1e1f22", borderRadius: "8px", padding: "16px" }}>
-                  <div style={{ fontSize: "12px", fontWeight: "600", textTransform: "uppercase", letterSpacing: "0.05em", color: "#80848e", marginBottom: "12px" }}>
+                <div className="compressor-result">
+                  <div className="compressor-result-title">
                     Compressed
                   </div>
-                  <div style={{ height: "160px", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "#0b0c0e", borderRadius: "6px", border: "1px solid #1e1f22", marginBottom: "12px" }}>
-                    <img
+                  <div className="compressor-image-preview">
+                    <NextImage
                       src={compressedUrl}
                       alt="Compressed"
+                      width={320}
+                      height={320}
+                      unoptimized
                       style={{
                         maxWidth: targetType === "emoji" ? "128px" : "160px",
                         maxHeight: targetType === "emoji" ? "128px" : "160px",
@@ -282,38 +265,21 @@ export default function EmojiStickerCompressor() {
                       }}
                     />
                   </div>
-                  <div style={{ fontSize: "13px", display: "flex", justifyContent: "space-between", marginBottom: "16px" }}>
-                    <span style={{ color: "#b5bac1" }}>Output Size:</span>
+                  <div className="compressor-output-size">
+                    <span>Output Size:</span>
                     <span
-                      style={{
-                        fontFamily: "monospace",
-                        fontWeight: "600",
-                        color: compressedSize <= maxSizeBytes ? "#acf6c8" : "#f23f43",
-                      }}
+                      className={compressedSize <= maxSizeBytes ? "is-within-limit" : "is-over-limit"}
                     >
                       {formatSize(compressedSize)} {compressedSize <= maxSizeBytes ? "✓" : "✕ (Over Limit)"}
                     </span>
                   </div>
                   <button
+                    type="button"
                     onClick={downloadFile}
-                    style={{
-                      width: "100%",
-                      display: "inline-flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: "8px",
-                      padding: "8px 12px",
-                      backgroundColor: "#2b2d31",
-                      color: "#ffffff",
-                      fontSize: "13px",
-                      fontWeight: "500",
-                      border: "none",
-                      borderRadius: "6px",
-                      cursor: "pointer",
-                      transition: "backgroundColor 0.15s ease",
-                    }}
+                    disabled={!compressedBlob || compressedSize > maxSizeBytes}
+                    className="tool-button tool-button-secondary compressor-action"
                   >
-                    <Download style={{ width: "14px", height: "14px" }} />
+                    <Download size={14} aria-hidden="true" />
                     Download File
                   </button>
                 </div>
@@ -322,10 +288,8 @@ export default function EmojiStickerCompressor() {
             </div>
           )}
 
-        </div>
-
-        <canvas ref={canvasRef} style={{ display: "none" }} />
-      </div>
-    </div>
+      </section>
+      <canvas ref={canvasRef} className="compressor-canvas" />
+    </main>
   );
 }

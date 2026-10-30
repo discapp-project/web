@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { newsletterIndex } from "./data/newsletters";
 
 const paths = [
   "/",
@@ -31,9 +32,10 @@ const paths = [
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  return paths.map((path) => ({
+  const articlePaths = newsletterIndex.map(({ slug }) => `/news/${slug}`);
+  return [...paths, ...articlePaths].map((path) => ({
     url: `https://discapp.org${path}`,
-    changeFrequency: path === "/news" ? "weekly" : "monthly",
-    priority: path === "/" ? 1 : path === "/privacy" || path === "/terms-of-use" ? 0.3 : 0.8,
+    changeFrequency: path.startsWith("/news") ? "weekly" : "monthly",
+    priority: path === "/" ? 1 : path === "/privacy" || path === "/terms-of-use" ? 0.3 : path.startsWith("/news/") ? 0.7 : 0.8,
   }));
 }
