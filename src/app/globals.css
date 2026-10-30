@@ -117,6 +117,27 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
 .search-box input::placeholder { color: var(--subtle); }
 .search-box button { width: 26px; height: 26px; display: grid; place-items: center; flex: 0 0 auto; padding: 0; border: 0; color: var(--muted); background: transparent; cursor: pointer; }
 .search-box button:hover { color: var(--text); }
+.directory-filters { width: 100%; max-width: 480px; display: flex; align-items: center; gap: 8px; margin-top: 20px; }
+.directory-search, .directory-category-button {
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  border: 1px solid #1e2024;
+  border-radius: 6px;
+  background: #090a0c;
+}
+.directory-search { flex: 1; min-width: 0; gap: 10px; padding: 0 12px; }
+.directory-search:focus-within, .directory-category-button:focus-visible { border-color: var(--line-strong); }
+.directory-search-icon { flex: 0 0 auto; color: #80848e; }
+.directory-search input { width: 100%; min-width: 0; border: 0; outline: 0; color: #f2f3f5; background: transparent; font-size: 14px; }
+.directory-search input::placeholder { color: #80848e; }
+.directory-category-control { position: relative; flex: 0 0 42px; }
+.directory-category-button { width: 42px; height: 42px; justify-content: center; padding: 0; color: #80848e; cursor: pointer; }
+.directory-category-button:hover, .directory-category-button[aria-expanded="true"] { border-color: var(--line-strong); color: #f2f3f5; }
+.directory-category-menu { position: absolute; top: calc(100% + 6px); right: 0; z-index: 10; width: max-content; min-width: 220px; max-width: min(280px, calc(100vw - 34px)); display: flex; flex-direction: column; gap: 2px; padding: 5px; border: 1px solid #1e2024; border-radius: 6px; background: #090a0c; box-shadow: 0 8px 24px rgba(0, 0, 0, .4); }
+.directory-category-option { width: 100%; min-height: 36px; border: 0; border-radius: 4px; padding: 0 10px; color: #f2f3f5; background: transparent; font-size: 12px; text-align: left; cursor: pointer; }
+.directory-category-option:hover, .directory-category-option:focus-visible { background: rgba(255, 255, 255, .07); }
+.directory-category-option[aria-checked="true"] { color: var(--accent); background: var(--accent-wash); }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
 .tool-list { margin-top: 21px; border-top: 1px solid var(--line); }
 .tool-link {

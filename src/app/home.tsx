@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowUpRight, Webhook, Library, BadgePlus, GlobeCode, UserSearch, Link2, Newspaper, Users, Search, Package, Snowflake, Palette, PencilLine, ArrowDownWideNarrow, FileMusic, Scaling, Calculator, CalendarDays, TypeOutline, Space, KeyRound, BrickWallShield, Regex, Puzzle, Braces, Baseline, BookText } from 'lucide-react';
+import { ArrowUpRight, Webhook, Library, BadgePlus, UserSearch, Link2, Newspaper, Search, Package, Snowflake, Palette, PencilLine, ArrowDownWideNarrow, FileMusic, Scaling, Calculator, CalendarDays, TypeOutline, Space, KeyRound, BrickWallShield, Regex, Puzzle, Braces, Baseline, BookText, ListSortDescending } from 'lucide-react';
 import { ServerSearch } from './components/icons/ServerSearch';
 
 const officialPages = [
@@ -26,6 +26,7 @@ const tools = [
   {
     title: 'Webhook Builder',
     description: 'Create Discord messages with embeds, delivery options, and live preview.',
+    category: 'Webhooks & Integrations',
     href: '/webhook-builder',
     icon: Webhook,
     iconClass: 'webhook-icon'
@@ -33,6 +34,7 @@ const tools = [
   {
     title: 'Automod Library',
     description: 'View and copy automod rules and regexes.',
+    category: 'Moderation & Permissions',
     href: '/automod-library',
     icon: Library,
     iconClass: 'library-icon'
@@ -40,6 +42,7 @@ const tools = [
   {
     title: 'Role Icon Maker',
     description: 'Create custom role icons for your Discord server.',
+    category: 'Assets & Media',
     href: '/role-icon-maker',
     icon: BadgePlus,
     iconClass: 'badge-plus'
@@ -47,6 +50,7 @@ const tools = [
   {
     title: 'User Lookup',
     description: 'Get information about a discord user by ID.',
+    category: 'Lookups & Utilities',
     href: '/user-lookup',
     icon: UserSearch,
     iconClass: 'user-search'
@@ -54,6 +58,7 @@ const tools = [
   {
     title: 'Server Lookup',
     description: 'Get information about a discord server by invite.',
+    category: 'Lookups & Utilities',
     href: '/server-lookup',
     icon: ServerSearch,
     iconClass: 'server-search'
@@ -61,6 +66,7 @@ const tools = [
   {
     title: 'Vanity URL Checker',
     description: 'Check if a custom invite code or vanity URL is currently available.',
+    category: 'Lookups & Utilities',
     href: '/vanity-checker',
     icon: Link2,
     iconClass: 'vanity-icon'
@@ -68,6 +74,7 @@ const tools = [
   {
     title: 'Asset stealer',
     description: 'Steal assets from a Discord server.',
+    category: 'Assets & Media',
     href: '/asset-stealer',
     icon: Package,
     iconClass: 'package'
@@ -75,6 +82,7 @@ const tools = [
   {
     title: 'Snowflake Decoder',
     description: 'Decode a Discord snowflake to get the internal information.',
+    category: 'Lookups & Utilities',
     href: '/snowflake-decoder',
     icon: Snowflake,
     iconClass: 'snowflake'
@@ -82,6 +90,7 @@ const tools = [
   {
     title: 'Gradient Finder',
     description: 'Find and customize beautiful color gradients for your roles.',
+    category: 'Assets & Media',
     href: '/gradient-finder',
     icon: Palette,
     iconClass: 'palette'
@@ -89,6 +98,7 @@ const tools = [
   {
     title: 'Markdown Cheatsheet',
     description: 'Quick reference for Discord markdown formatting.',
+    category: 'Text & Formatting',
     href: '/markdown-cheatsheet',
     icon: PencilLine,
     iconClass: 'pencil-line'
@@ -96,6 +106,7 @@ const tools = [
   {
     title: 'Asset Compressor',
     description: 'Compress stickers and emojis.',
+    category: 'Assets & Media',
     href: '/asset-compressor',
     icon: ArrowDownWideNarrow,
     iconClass: 'arrow-down-wide-narrow'
@@ -103,6 +114,7 @@ const tools = [
   {
     title: 'Soundboard Studio',
     description: 'Create and edit soundboard clips for your server.',
+    category: 'Assets & Media',
     href: '/soundboard-studio',
     icon: FileMusic,
     iconClass: 'file-music'
@@ -110,6 +122,7 @@ const tools = [
   {
     title: 'Asset Resizer',
     description: 'Resize assets for a server or profile.',
+    category: 'Assets & Media',
     href: '/asset-resizer',
     icon: Scaling,
     iconClass: 'scaling'
@@ -117,6 +130,7 @@ const tools = [
   {
     title: 'Permission Calculator',
     description: 'Easily setup permissions for your applications.',
+    category: 'Moderation & Permissions',
     href: '/permission-calculator',
     icon: Calculator,
     iconClass: 'calculator'
@@ -124,6 +138,7 @@ const tools = [
   {
     title: 'Timestamp Generator',
     description: 'Generate Discord-compatible timestamps for messages and events.',
+    category: 'Lookups & Utilities',
     href: '/timestamp-generator',
     icon: CalendarDays,
     iconClass: 'CalendarDays'
@@ -131,6 +146,7 @@ const tools = [
   {
     title: 'Font Generator',
     description: 'Get custom fonts for your Discord display names.',
+    category: 'Text & Formatting',
     href: '/font-generator',
     icon: TypeOutline,
     iconClass: 'type-outline'
@@ -138,6 +154,7 @@ const tools = [
   {
     title: 'Space Generator',
     description: 'Inject zero-width spaces into your text for Discord.',
+    category: 'Text & Formatting',
     href: '/space-generator',
     icon: Space,
     iconClass: 'space'
@@ -145,6 +162,7 @@ const tools = [
   {
     title: 'Automod Permission Decoder',
     description: 'Decode and understand automod permissions for your server.',
+    category: 'Moderation & Permissions',
     href: '/automod-permission-decoder',
     icon: KeyRound,
     iconClass: 'key-round'
@@ -152,6 +170,7 @@ const tools = [
   {
     title: 'Automod Tester',
     description: 'Test automod regexes and keywords before implementation.',
+    category: 'Moderation & Permissions',
     href: '/automod-tester',
     icon: BrickWallShield,
     iconClass: 'brick-wall-shield'
@@ -159,6 +178,7 @@ const tools = [
   {
     title: 'Regex Creator',
     description: 'Create regexes for your Discord automod.',
+    category: 'Moderation & Permissions',
     href: '/regex-creator',
     icon: Regex,
     iconClass: 'regex'
@@ -166,6 +186,7 @@ const tools = [
   {
     title: 'RPC Builder',
     description: 'Build custom rich presence states for your Discord account.',
+    category: 'Webhooks & Integrations',
     href: '/rpc-builder',
     icon: Puzzle,
     iconClass: 'puzzle'
@@ -173,6 +194,7 @@ const tools = [
   {
     title: 'JSON Formatter',
     description: 'Fix and format webhook JSON payloads.',
+    category: 'Text & Formatting',
     href: '/webhook-json-formatter',
     icon: Braces,
     iconClass: 'braces'
@@ -180,6 +202,7 @@ const tools = [
   {
     title: 'ANSI Builder',
     description: 'Design custom Discord ANSI-colored code blocks for Discord.',
+    category: 'Text & Formatting',
     href: '/ansi-builder',
     icon: Baseline,
     iconClass: 'baseline'
@@ -188,33 +211,108 @@ const tools = [
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All categories');
+  const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState(false);
+  const categoryControlRef = useRef<HTMLDivElement>(null);
+  const categoryButtonRef = useRef<HTMLButtonElement>(null);
+  const query = searchQuery.trim().toLowerCase();
+  const categories = [...new Set(tools.map((tool) => tool.category))].sort((a, b) =>
+    a.localeCompare(b)
+  );
+
+  useEffect(() => {
+    if (!isCategoryMenuOpen) return;
+
+    const closeOnOutsideClick = (event: PointerEvent) => {
+      if (!categoryControlRef.current?.contains(event.target as Node)) {
+        setIsCategoryMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('pointerdown', closeOnOutsideClick);
+    return () => document.removeEventListener('pointerdown', closeOnOutsideClick);
+  }, [isCategoryMenuOpen]);
 
   const filteredTools = tools.filter((tool) => {
-    const q = searchQuery.toLowerCase().trim();
-    return tool.title.toLowerCase().includes(q) || tool.description.toLowerCase().includes(q);
+    const matchesSearch =
+      !query ||
+      tool.title.toLowerCase().includes(query) ||
+      tool.description.toLowerCase().includes(query) ||
+      tool.category.toLowerCase().includes(query);
+    const matchesCategory =
+      selectedCategory === 'All categories' || tool.category === selectedCategory;
+    return matchesSearch && matchesCategory;
   });
-
   return (
     <main className="page-wrap directory-page">
       <header className="directory-header">
         <p className="page-kicker">Discapp Toolkit</p>
         <h1>Find easy to use tools for your Discord server!</h1>
         
-        <div style={{ marginTop: '20px', position: 'relative', width: '100%', maxWidth: '480px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', backgroundColor: '#090a0c', borderRadius: '6px', border: '1px solid #1e2024', padding: '10px 14px' }}>
-            <Search size={16} style={{ color: '#80848e', marginRight: '10px', flexShrink: 0 }} aria-hidden="true" />
+        <div className="directory-filters">
+          <label className="directory-search">
+            <Search className="directory-search-icon" size={16} aria-hidden="true" />
+            <span className="sr-only">Search tools by name, description, or category</span>
             <input
-              type="text"
+              type="search"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(event) => setSearchQuery(event.target.value)}
               placeholder="Search tools by name or description..."
-              style={{ width: '100%', backgroundColor: 'transparent', color: '#f2f3f5', border: 'none', outline: 'none', fontSize: '14px', fontFamily: 'inherit' }}
             />
+          </label>
+          <div
+            className="directory-category-control"
+            ref={categoryControlRef}
+            onKeyDown={(event) => {
+              if (event.key === 'Escape' && isCategoryMenuOpen) {
+                setIsCategoryMenuOpen(false);
+                categoryButtonRef.current?.focus();
+              }
+            }}
+          >
+            <button
+              ref={categoryButtonRef}
+              className="directory-category-button"
+              type="button"
+              aria-label={`Filter tools by category. Selected: ${selectedCategory}`}
+              aria-haspopup="menu"
+              aria-expanded={isCategoryMenuOpen}
+              aria-controls="directory-category-menu"
+              title={`Category: ${selectedCategory}`}
+              onClick={() => setIsCategoryMenuOpen((isOpen) => !isOpen)}
+            >
+              <ListSortDescending size={20} aria-hidden="true" />
+            </button>
+            {isCategoryMenuOpen && (
+              <div
+                className="directory-category-menu"
+                id="directory-category-menu"
+                role="menu"
+                aria-label="Filter tools by category"
+              >
+                {['All categories', ...categories].map((category) => (
+                  <button
+                    className="directory-category-option"
+                    key={category}
+                    type="button"
+                    role="menuitemradio"
+                    aria-checked={selectedCategory === category}
+                    onClick={() => {
+                      setSelectedCategory(category);
+                      setIsCategoryMenuOpen(false);
+                      categoryButtonRef.current?.focus();
+                    }}
+                  >
+                    {category}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </header>
 
-      {!searchQuery && (
+      {!query && (
         <section style={{ marginBottom: '32px' }}>
           <p className="page-kicker" style={{ marginBottom: '12px', fontSize: '11px', fontWeight: '700', color: '#80848e' }}>Official Pages</p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -238,32 +336,30 @@ export default function Home() {
       )}
 
       <section>
-        {!searchQuery && (
+        {!query && (
           <p className="page-kicker" style={{ marginBottom: '12px', fontSize: '11px', fontWeight: '700', color: '#80848e' }}>Active Tools</p>
         )}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          {filteredTools.length > 0 ? (
-            filteredTools.map((tool) => {
-              const IconComponent = tool.icon;
-              return (
-                <Link key={tool.href} className="tool-link" href={tool.href}>
-                  <span className={`tool-icon ${tool.iconClass}`} aria-hidden="true">
-                    <IconComponent size={24} />
-                  </span>
-                  <span className="tool-copy">
-                    <span className="tool-title">{tool.title}</span>
-                    <span className="tool-description">{tool.description}</span>
-                  </span>
-                  <ArrowUpRight className="tool-arrow" size={16} aria-hidden="true" />
-                </Link>
-              );
-            })
-          ) : (
-            <div style={{ padding: '24px 0', color: '#80848e', fontSize: '14px' }}>
-              No tools found matching "{searchQuery}".
-            </div>
-          )}
-        </div>
+        {filteredTools.length > 0 ? (
+          filteredTools.map((tool) => {
+            const IconComponent = tool.icon;
+            return (
+              <Link key={tool.href} className="tool-link" href={tool.href}>
+                <span className={`tool-icon ${tool.iconClass}`} aria-hidden="true">
+                  <IconComponent size={24} />
+                </span>
+                <span className="tool-copy">
+                  <span className="tool-title">{tool.title}</span>
+                  <span className="tool-description">{tool.description}</span>
+                </span>
+                <ArrowUpRight className="tool-arrow" size={16} aria-hidden="true" />
+              </Link>
+            );
+          })
+        ) : (
+          <div style={{ padding: '24px 0', color: '#80848e', fontSize: '14px' }}>
+            No tools found matching &quot;{searchQuery}&quot;.
+          </div>
+        )}
       </section>
 
     </main>
