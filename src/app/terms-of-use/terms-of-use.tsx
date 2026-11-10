@@ -35,7 +35,7 @@ export default function TermsOfUse() {
             Terms of Use
           </h1>
           <p style={{ color: "#80848e", fontSize: "14px", margin: 0 }}>
-            Last updated: 2026-10-30
+            Last updated: 2026-11-10
           </p>
         </div>
 
@@ -80,7 +80,7 @@ export default function TermsOfUse() {
               2. Service Description
             </h2>
             <p style={{ color: "#949ba4", fontSize: "14px", lineHeight: "1.6", margin: 0 }}>
-              discapp.org provides free utilities for Discord users. Some tools, including image processing and design tools, operate in your browser. Other features, including user lookups, bug reports, and webhook profile, message, and delivery operations, use Discapp API routes and/or third-party services such as Discord and hCaptcha. The tools and their output are provided on an &quot;as-is&quot; and &quot;as-available&quot; basis. We may change, suspend, or discontinue any feature.
+              discapp.org provides free utilities for Discord users. Some tools, including image processing and design tools, operate in your browser. Other features, including optional Discord sign-in, user lookups, bug reports, and webhook profile, message, and delivery operations, use Discapp API routes and/or third-party services such as Discord, Supabase, and hCaptcha. Discord sign-in is optional and is handled by Supabase Auth; Discapp&apos;s app profile uses the Supabase user ID, Discord user ID, and display name. You are responsible for keeping access to your Discord account and signed-in device secure. Do not use sign-in or account features to claim or manage a Discord server you do not own or have permission to manage. The tools and their output are provided on an &quot;as-is&quot; and &quot;as-available&quot; basis. We may change, suspend, or discontinue any feature.
             </p>
           </div>
 
@@ -192,7 +192,7 @@ export default function TermsOfUse() {
               9. Third-Party Integrations & Services
             </h2>
             <p style={{ color: "#949ba4", fontSize: "14px", lineHeight: "1.6", margin: 0 }}>
-              Discapp uses Vercel for hosting, hCaptcha for bot prevention on selected features, and Discord services for lookups and webhook operations. The current app code does not include Vercel Analytics. Your use of those features may involve sending information to the relevant provider, which processes it under its own terms and privacy policy: <a href="https://vercel.com/legal/terms" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>Vercel Terms</a>, <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>Vercel Privacy Policy</a>, <a href="https://www.hcaptcha.com/terms" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>hCaptcha Terms</a>, <a href="https://www.hcaptcha.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>hCaptcha Privacy Policy</a>, <a href="https://discord.com/terms" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>Discord Terms</a>, and <a href="https://discord.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>Discord Privacy Policy</a>.
+              Discapp uses Vercel for hosting, Supabase Auth for Discord sign-in, hCaptcha for bot prevention on selected features, and Discord services for lookups and webhook operations. The current app code does not include Vercel Analytics. Use of these features may involve sending information to the relevant provider, which processes it under its own terms and privacy policy: <a href="https://vercel.com/legal/terms" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>Vercel Terms</a>, <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>Vercel Privacy Policy</a>, <a href="https://supabase.com/terms" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>Supabase Terms</a>, <a href="https://supabase.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>Supabase Privacy Policy</a>, <a href="https://www.hcaptcha.com/terms" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>hCaptcha Terms</a>, <a href="https://www.hcaptcha.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>hCaptcha Privacy Policy</a>, <a href="https://discord.com/terms" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>Discord Terms</a>, and <a href="https://discord.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>Discord Privacy Policy</a>.
             </p>
           </div>
 

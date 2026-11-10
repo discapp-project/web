@@ -2,6 +2,13 @@
 
 import React, { useState, useRef } from 'react';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
+import {
+  getAvatarDecorationUrl,
+  getAvatarUrl,
+  getBannerUrl,
+  getClanBadgeUrl,
+  getNameplateUrl,
+} from './asset-urls';
 
 interface DiscordUserResponse {
   id: string;
@@ -51,7 +58,6 @@ interface DiscordUserResponse {
     tag?: string;
     badge?: string;
   } | null;
-  [key: string]: any;
 }
 
 export default function DiscordUserLookup() {
@@ -110,8 +116,8 @@ export default function DiscordUserLookup() {
 
       setUserData(data);
       setRawJson(JSON.stringify(data, null, 2));
-    } catch (err: any) {
-      setError(err.message || 'Failed to fetch user data.');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to fetch user data.');
     } finally {
       setLoading(false);
       setCaptchaToken(null);
@@ -147,30 +153,6 @@ export default function DiscordUserLookup() {
     });
 
     return activeFlags;
-  };
-
-  const getAvatarUrl = (id: string, hash: string | null) => {
-    if (!hash) return 'https://cdn.discordapp.com/embed/avatars/0.png';
-    const ext = hash.startsWith('a_') ? 'gif' : 'png';
-    return `https://cdn.discordapp.com/avatars/${id}/${hash}.${ext}?size=1024`;
-  };
-
-  const getBannerUrl = (id: string, hash: string | null) => {
-    if (!hash) return null;
-    const ext = hash.startsWith('a_') ? 'gif' : 'png';
-    return `https://cdn.discordapp.com/banners/${id}/${hash}.${ext}?size=1024`;
-  };
-
-  const getClanBadgeUrl = (guildId?: string, badgeHash?: string) => {
-    if (!guildId || !badgeHash) return null;
-    return `https://cdn.discordapp.com/clan-badges/${guildId}/${badgeHash}.png`;
-  };
-
-  const getNameplateUrl = (assetPath?: string) => {
-    if (!assetPath) return null;
-    if (assetPath.startsWith('http')) return assetPath;
-    const cleanPath = assetPath.replace(/\/$/, '');
-    return `https://cdn.discordapp.com/assets/${cleanPath}/asset.png`;
   };
 
   const getCreationDate = (id: string) => {
@@ -517,7 +499,7 @@ export default function DiscordUserLookup() {
                   {userData.avatar_decoration_data ? (
                     <div style={{ display: 'flex', gap: '16px', alignItems: 'center', flexWrap: 'wrap' }}>
                       <img
-                        src={`https://cdn.discordapp.com/avatar-decoration-presets/${userData.avatar_decoration_data.asset}.png`}
+                        src={getAvatarDecorationUrl(userData.avatar_decoration_data.asset) ?? 'https://cdn.discordapp.com/embed/avatars/0.png'}
                         alt="Avatar Decoration Asset"
                         style={{ width: '64px', height: '64px', backgroundColor: '#09090b', borderRadius: '6px', border: '1px solid #1c1d22', padding: '4px' }}
                       />

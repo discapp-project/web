@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import Link from "next/link";
+import AuthControl from "./components/AuthControl";
 import BugReportButton from "./components/BugReportButton";
 import "./globals.css";
 
@@ -62,6 +63,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
             <div className="topbar-actions">
               <Link className="topbar-link topbar-community" href="https://discord.gg/ymc3Ba4qk9">Join the Community!</Link>
               <BugReportButton />
+              <AuthControl />
               <Link 
                 href="https://github.com/discapp-project/web" 
                 target="_blank" 
