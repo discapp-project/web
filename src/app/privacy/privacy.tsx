@@ -35,12 +35,11 @@ export default function PrivacyPolicy() {
             Privacy Policy
           </h1>
           <p style={{ color: "#80848e", fontSize: "14px", margin: 0 }}>
-            Last updated: 2026-11-10
+            Last updated: 2026-11-11
           </p>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: "32px" }}>
-          
           <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
             <h2
               style={{
@@ -50,10 +49,85 @@ export default function PrivacyPolicy() {
                 margin: 0,
               }}
             >
-              1. Accounts and Browser Storage
+              1. Information Collection and Storage
             </h2>
             <p style={{ color: "#949ba4", fontSize: "14px", lineHeight: "1.6", margin: 0 }}>
-              Discord sign-in is optional and handled by Supabase Auth. The requested Discord scope is <code>identify</code>; it does not request access to email or servers. Discapp&apos;s profile table stores the Supabase user ID, Discord user ID, and display name. It does not store email, avatar, or Discord OAuth tokens. Supabase manages authentication records and session cookies under its <a href="https://supabase.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>Privacy Policy</a>; Discord&apos;s handling is described in its <a href="https://discord.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>Privacy Policy</a>. Signing out ends the active session. The Role Icon Maker stores settings and uploaded images in browser localStorage; clearing this site&apos;s browser storage removes them. Other image and design tools generally process files in the browser unless a feature states otherwise. hCaptcha may use cookies and process device, browser, network, and interaction data for security; see its <a href="https://www.hcaptcha.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>Privacy Policy</a>.
+              Discapp collects limited information necessary to operate our services:
+            </p>
+            <ul style={{ color: "#949ba4", fontSize: "14px", lineHeight: "1.6", margin: "8px 0 0 20px", padding: 0 }}>
+              <li>
+                <strong style={{ color: "#dbdee1" }}>Account Data:</strong> Optional sign-in is processed via Supabase Auth using Discord&apos;s <code>identify</code> scope. We store your Supabase user ID, Discord user ID, and display name. Public profile and vanity link details (slug, invite code, title, and description) are publicly visible.
+              </li>
+              <li>
+                <strong style={{ color: "#dbdee1" }}>Local &amp; Session Storage:</strong> Unsubmitted forms are kept temporarily in <code>sessionStorage</code>. Tool preferences and user-uploaded media are stored in your browser&apos;s <code>localStorage</code> and can be deleted by clearing your browser data.
+              </li>
+            </ul>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+            <h2
+              style={{
+                fontSize: "16px",
+                fontWeight: "600",
+                color: "#ffffff",
+                margin: 0,
+              }}
+            >
+              2. Feature Data Processing
+            </h2>
+            <ul style={{ color: "#949ba4", fontSize: "14px", lineHeight: "1.6", margin: 0, paddingLeft: "20px" }}>
+              <li>
+                <strong style={{ color: "#dbdee1" }}>Bug Reports:</strong> Reports containing your text input, browser, device, and viewport details are forwarded to a Discord support channel. IP addresses are processed in-memory for up to 10 minutes strictly for rate limiting and are not stored.
+              </li>
+              <li>
+                <strong style={{ color: "#dbdee1" }}>Discord Lookups &amp; Webhooks:</strong> Search queries (user IDs, invite codes) and webhook payloads (content, target URLs) are transmitted through our API to Discord. We do not persist these inputs or results in our database.
+              </li>
+            </ul>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+            <h2
+              style={{
+                fontSize: "16px",
+                fontWeight: "600",
+                color: "#ffffff",
+                margin: 0,
+              }}
+            >
+              3. Third-Party Services
+            </h2>
+            <p style={{ color: "#949ba4", fontSize: "14px", lineHeight: "1.6", margin: 0 }}>
+              We share data with infrastructure providers solely to operate, secure, and prevent abuse on our platform. Third-party handling is governed by their respective privacy terms:
+            </p>
+            <ul style={{ color: "#949ba4", fontSize: "14px", lineHeight: "1.6", margin: "8px 0 0 20px", padding: 0 }}>
+              <li>
+                <a href="https://supabase.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>Supabase Privacy Policy</a> (Authentication &amp; Database)
+              </li>
+              <li>
+                <a href="https://discord.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>Discord Privacy Policy</a> (OAuth &amp; API Services)
+              </li>
+              <li>
+                <a href="https://www.hcaptcha.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>hCaptcha Privacy Policy</a> (Bot Protection &amp; Security)
+              </li>
+              <li>
+                <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>Vercel Privacy Policy</a> (Hosting &amp; Server Logs)
+              </li>
+            </ul>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+            <h2
+              style={{
+                fontSize: "16px",
+                fontWeight: "600",
+                color: "#ffffff",
+                margin: 0,
+              }}
+            >
+              4. Data Use &amp; Disclosure
+            </h2>
+            <p style={{ color: "#949ba4", fontSize: "14px", lineHeight: "1.6", margin: 0 }}>
+              Discapp does not sell, rent, or monetize your personal information, nor do we use it for advertising or marketing purposes.
             </p>
           </div>
 
@@ -66,10 +140,10 @@ export default function PrivacyPolicy() {
                 margin: 0,
               }}
             >
-              2. Bug Reports
+              5. Children&apos;s Privacy
             </h2>
             <p style={{ color: "#949ba4", fontSize: "14px", lineHeight: "1.6", margin: 0 }}>
-              Bug reports include the submitted title and details, page path, browser and device information, language, time zone, screen and viewport dimensions, and pixel ratio. Reports are sent to a Discord support channel and are not stored in Discapp&apos;s application database. Discord channel access determines who can view reports; Discord&apos;s policies and channel management determine their retention. The report service temporarily uses the connection IP for an in-memory rate limit of up to ten minutes. The IP is not included in the report.
+              Discapp is not directed to children under 13 (or under 16 in the EEA). We do not knowingly collect or store personal information from children under these ages. If you believe a child has provided us with personal information, please contact us so we can promptly delete it.
             </p>
           </div>
 
@@ -82,10 +156,10 @@ export default function PrivacyPolicy() {
                 margin: 0,
               }}
             >
-              3. Abuse Prevention
+              6. Your Rights &amp; Data Retention
             </h2>
             <p style={{ color: "#949ba4", fontSize: "14px", lineHeight: "1.6", margin: 0 }}>
-              hCaptcha protects bug reports and user lookups from automated abuse. Verification tokens are sent to hCaptcha for validation. hCaptcha&apos;s <a href="https://www.hcaptcha.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>Privacy Policy</a> and <a href="https://www.hcaptcha.com/terms" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>Terms</a> apply to its processing.
+              You may request access to, correction of, or deletion of your personal data at any time. Account data is retained until you delete your account or request data removal. Local browser storage can be cleared manually via your browser settings.
             </p>
           </div>
 
@@ -98,54 +172,10 @@ export default function PrivacyPolicy() {
                 margin: 0,
               }}
             >
-              4. Hosting and Analytics
-            </h2>
-            <p style={{ color: "#949ba4", fontSize: "14px", lineHeight: "1.6", margin: "0 0 8px 0" }}>
-              <strong style={{ color: "#dbdee1" }}>Analytics:</strong> Discapp does not currently load Vercel Analytics or another analytics script.
-            </p>
-            <p style={{ color: "#949ba4", fontSize: "14px", lineHeight: "1.6", margin: 0 }}>
-              <strong style={{ color: "#dbdee1" }}>Hosting and security:</strong> Hosting and security providers may process IP address, request time, route, and browser information to operate and protect the site. Logging and retention depend on provider settings. See Vercel&apos;s <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>Privacy Policy</a>.
-            </p>
-          </div>
-
-          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-            <h2
-              style={{
-                fontSize: "16px",
-                fontWeight: "600",
-                color: "#ffffff",
-                margin: 0,
-              }}
-            >
-              5. Discord Lookups
+              7. Changes to This Policy
             </h2>
             <p style={{ color: "#949ba4", fontSize: "14px", lineHeight: "1.6", margin: 0 }}>
-              User Lookup sends the entered Discord user ID through a Discapp API route to Discord. Server Lookup and Vanity URL Checker send invite or vanity codes from the browser to Discord. Lookup inputs and results are not stored in Discapp&apos;s application database. Discord&apos;s <a href="https://discord.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>Privacy Policy</a> applies to its processing.
-            </p>
-          </div>
-
-          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-            <h2 style={{ fontSize: "16px", fontWeight: "600", color: "#ffffff", margin: 0 }}>
-              6. Webhook Builder
-            </h2>
-            <p style={{ color: "#949ba4", fontSize: "14px", lineHeight: "1.6", margin: 0 }}>
-              The Webhook Builder sends the provided webhook URL, message content, files, and message or thread identifiers through Discapp&apos;s API to Discord. A webhook URL can control the associated webhook; use only authorized URLs and keep them private. These request contents are not stored in Discapp&apos;s application database. Discord&apos;s policies govern messages sent through its service.
-            </p>
-          </div>
-
-          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-            <h2
-              style={{
-                fontSize: "16px",
-                fontWeight: "600",
-                color: "#ffffff",
-                margin: 0,
-              }}
-            >
-              7. Use and Disclosure
-            </h2>
-            <p style={{ color: "#949ba4", fontSize: "14px", lineHeight: "1.6", margin: 0 }}>
-              Discapp does not sell personal information or use it for advertising or marketing. Information is shared with service providers only as needed to deliver requested features, prevent abuse, or operate the site. Each provider&apos;s privacy terms apply to its processing.
+              We may update this Privacy Policy from time to time. Any updates will be posted on this page with a revised &quot;Last updated&quot; date.
             </p>
           </div>
 
@@ -166,10 +196,10 @@ export default function PrivacyPolicy() {
                 margin: 0,
               }}
             >
-              Contact Information
+              8. Contact Us
             </h2>
             <p style={{ color: "#949ba4", fontSize: "14px", lineHeight: "1.6", margin: 0 }}>
-              Questions about this policy or Discapp&apos;s handling of information may be sent to{" "}
+              For questions regarding this policy or to exercise your privacy rights, contact{" "}
               <a
                 href="mailto:legal@discapp.org"
                 style={{
@@ -183,7 +213,6 @@ export default function PrivacyPolicy() {
               .
             </p>
           </div>
-
         </div>
       </div>
     </div>

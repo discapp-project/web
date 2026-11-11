@@ -35,7 +35,7 @@ export default function TermsOfUse() {
             Terms of Use
           </h1>
           <p style={{ color: "#80848e", fontSize: "14px", margin: 0 }}>
-            Last updated: 2026-11-10
+            Last updated: 2026-11-11
           </p>
         </div>
 
@@ -47,7 +47,7 @@ export default function TermsOfUse() {
             margin: 0,
           }}
         >
-          Please read these Terms of Use carefully before accessing or using discapp.org. By accessing or using any part of the site, you agree to be legally bound by these terms. If you do not agree to all of the terms and conditions stated herein, you are expressly prohibited from accessing or using the site and its services.
+          By accessing or using discapp.org, you agree to be bound by these Terms of Use. If you do not agree, do not use the site.
         </p>
 
         <div style={{ display: "flex", flexDirection: "column", gap: "32px" }}>
@@ -61,10 +61,10 @@ export default function TermsOfUse() {
                 margin: 0,
               }}
             >
-              1. Acceptance of Terms
+              1. Service Description &amp; Eligibility
             </h2>
             <p style={{ color: "#949ba4", fontSize: "14px", lineHeight: "1.6", margin: 0 }}>
-              By accessing, browsing, or utilizing discapp.org, you acknowledge that you have read, understood, and agreed to comply with these Terms of Use, as well as all applicable local, state, national, and international laws and regulations. Continued usage of the platform constitutes ongoing acceptance of any future modifications to these terms.
+              discapp.org provides free utilities for Discord users. You must be at least 13 years of age (or the legal minimum age in your jurisdiction) to use this site. Services and tools are provided &quot;as-is&quot; and may be modified or discontinued at any time without notice.
             </p>
           </div>
 
@@ -77,10 +77,10 @@ export default function TermsOfUse() {
                 margin: 0,
               }}
             >
-              2. Service Description
+              2. No Official Affiliation
             </h2>
             <p style={{ color: "#949ba4", fontSize: "14px", lineHeight: "1.6", margin: 0 }}>
-              discapp.org provides free utilities for Discord users. Some tools, including image processing and design tools, operate in your browser. Other features, including optional Discord sign-in, user lookups, bug reports, and webhook profile, message, and delivery operations, use Discapp API routes and/or third-party services such as Discord, Supabase, and hCaptcha. Discord sign-in is optional and is handled by Supabase Auth; Discapp&apos;s app profile uses the Supabase user ID, Discord user ID, and display name. You are responsible for keeping access to your Discord account and signed-in device secure. Do not use sign-in or account features to claim or manage a Discord server you do not own or have permission to manage. The tools and their output are provided on an &quot;as-is&quot; and &quot;as-available&quot; basis. We may change, suspend, or discontinue any feature.
+              discapp.org is an independent project and is NOT affiliated with, authorized, maintained, sponsored, or endorsed by Discord Inc. Discord trademarks belong solely to Discord Inc.
             </p>
           </div>
 
@@ -93,10 +93,10 @@ export default function TermsOfUse() {
                 margin: 0,
               }}
             >
-              3. No Official Affiliation
+              3. Acceptable Use
             </h2>
             <p style={{ color: "#949ba4", fontSize: "14px", lineHeight: "1.6", margin: 0 }}>
-              discapp.org is an entirely independent developer project. It is NOT affiliated with, authorized by, maintained by, sponsored by, or in any way officially connected with Discord Inc. or any of its parent companies, subsidiaries, or affiliates. Use of any Discord-related terms, icons, or references is purely for descriptive, educational, and interoperability purposes.
+              You agree not to abuse the site&apos;s infrastructure, attempt unauthorized access, bypass security controls (e.g., hCaptcha), scrape data via automated tools, or transmit malicious code. You are solely responsible for ensuring you have the necessary rights to any content, webhooks, or files you process through our services.
             </p>
           </div>
 
@@ -109,10 +109,14 @@ export default function TermsOfUse() {
                 margin: 0,
               }}
             >
-              4. Acceptable Use & Conduct
+              4. Intellectual Property &amp; Open Source
             </h2>
             <p style={{ color: "#949ba4", fontSize: "14px", lineHeight: "1.6", margin: 0 }}>
-              You agree to use the site lawfully and not abuse its infrastructure, scrape it with automated bots, submit malicious payloads, spam forms, attempt denial-of-service attacks, or bypass security controls such as hCaptcha. You must be authorized to submit or use a Discord webhook URL; webhook URLs can act as credentials. You are responsible for having the rights and permissions needed for message content, images, audio, and other files you submit or send. You must comply with Discord&apos;s applicable terms and policies when using Discord features or sending content through Discord.
+              Discapp original branding and site design are protected by intellectual property laws. Website source code hosted in our public repository is subject to its separate{" "}
+              <a href="https://github.com/discapp-project/web/blob/main/LICENCE.md" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>
+                repository license
+              </a>
+              . Third-party libraries, patterns, and assets remain the property of their respective owners and are used under license or permission.
             </p>
           </div>
 
@@ -125,10 +129,10 @@ export default function TermsOfUse() {
                 margin: 0,
               }}
             >
-              5. Third-Party Contributions & Attributed Content
+              5. Third-Party Integrations
             </h2>
             <p style={{ color: "#949ba4", fontSize: "14px", lineHeight: "1.6", margin: 0 }}>
-              Certain tools, modules, patterns, or library assets hosted on discapp.org—including standalone utility modules integrated with developer permission, and shared community patterns (such as our AutoMod regex library)—originate from third-party developers and external open-source contributors. Intellectual property rights for these contributed components remain with their respective creators or original rights holders. Where applicable, discapp.org provides explicit attribution and credit. By using these contributed tools or assets, you acknowledge that their inclusion is made under agreement or open license and does not transfer ownership to discapp.org.
+              Certain features rely on third-party services including Vercel, Supabase, hCaptcha, and Discord. Your use of these features is subject to the respective terms and privacy policies of those providers.
             </p>
           </div>
 
@@ -144,7 +148,7 @@ export default function TermsOfUse() {
               6. Disclaimer of Warranties
             </h2>
             <p style={{ color: "#949ba4", fontSize: "14px", lineHeight: "1.6", margin: 0 }}>
-              All tools, generated code snippets, formatted output, and instructional contents are provided without warranties of any kind, whether express, implied, statutory, or otherwise. We make no guarantees regarding 100% operational uptime, error-free code output, technical accuracy, data loss prevention, or fitness for a particular software environment or bot framework.
+              The site and all related utilities are provided &quot;as is&quot; without warranties of any kind, express or implied, including fitness for a particular purpose, uptime, accuracy, or non-infringement.
             </p>
           </div>
 
@@ -160,7 +164,7 @@ export default function TermsOfUse() {
               7. Limitation of Liability
             </h2>
             <p style={{ color: "#949ba4", fontSize: "14px", lineHeight: "1.6", margin: 0 }}>
-              To the fullest extent permitted by applicable law, the site owners, developers, contributors, and maintainers shall not be liable for any direct, indirect, incidental, special, consequential, or punitive damages—including but not limited to loss of data, bot downtime, server suspensions, or API rate-limit bans—resulting from your usage of, reliance on, or inability to use discapp.org or its output code.
+              To the maximum extent permitted by law, discapp.org and its operators will not be liable for any direct, indirect, incidental, or consequential damages resulting from your use of or inability to use the site or its services.
             </p>
           </div>
 
@@ -173,10 +177,10 @@ export default function TermsOfUse() {
                 margin: 0,
               }}
             >
-              8. Intellectual Property Rights
+              8. Termination &amp; Account Suspension
             </h2>
             <p style={{ color: "#949ba4", fontSize: "14px", lineHeight: "1.6", margin: 0 }}>
-              Discapp branding, original site content, and original designs are owned by their respective rights holders and are not granted for reuse by these Terms. The website source code in our public repository is subject to the separate <a href="https://github.com/discapp-project/web/blob/main/LICENCE.md" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>repository license</a>. That license permits viewing and audit, and forks for the purpose of submitting contributions to the project; it does not grant general permission to redistribute, rehost, rebrand, sublicense, or commercially use the code. Components and contributions with separate licenses remain subject to those licenses. Discord names and marks belong to Discord Inc.
+              We reserve the right to block access, terminate registered vanity links, or limit site features for any user who violates these Terms or engages in abuse.
             </p>
           </div>
 
@@ -189,10 +193,10 @@ export default function TermsOfUse() {
                 margin: 0,
               }}
             >
-              9. Third-Party Integrations & Services
+              9. Governing Law &amp; Severability
             </h2>
             <p style={{ color: "#949ba4", fontSize: "14px", lineHeight: "1.6", margin: 0 }}>
-              Discapp uses Vercel for hosting, Supabase Auth for Discord sign-in, hCaptcha for bot prevention on selected features, and Discord services for lookups and webhook operations. The current app code does not include Vercel Analytics. Use of these features may involve sending information to the relevant provider, which processes it under its own terms and privacy policy: <a href="https://vercel.com/legal/terms" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>Vercel Terms</a>, <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>Vercel Privacy Policy</a>, <a href="https://supabase.com/terms" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>Supabase Terms</a>, <a href="https://supabase.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>Supabase Privacy Policy</a>, <a href="https://www.hcaptcha.com/terms" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>hCaptcha Terms</a>, <a href="https://www.hcaptcha.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>hCaptcha Privacy Policy</a>, <a href="https://discord.com/terms" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>Discord Terms</a>, and <a href="https://discord.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: "#acf6c8" }}>Discord Privacy Policy</a>.
+              These terms are governed by applicable laws without regard to conflict of law principles. If any provision of these Terms is found unenforceable, the remaining provisions will remain in full force and effect.
             </p>
           </div>
 
@@ -205,10 +209,10 @@ export default function TermsOfUse() {
                 margin: 0,
               }}
             >
-              10. Modifications & Service Discontinuation
+              10. Changes to Terms
             </h2>
             <p style={{ color: "#949ba4", fontSize: "14px", lineHeight: "1.6", margin: 0 }}>
-              We may update these Terms of Use from time to time. Updates will be reflected on this page with a revised &quot;Last updated&quot; date. We may temporarily or permanently suspend, migrate, or discontinue any tool or feature.
+              We may update these Terms of Use at any time. Continued use of the site after updates constitutes acceptance of the revised Terms.
             </p>
           </div>
 
@@ -229,10 +233,10 @@ export default function TermsOfUse() {
                 margin: 0,
               }}
             >
-              Contact Information
+              11. Contact Us
             </h2>
             <p style={{ color: "#949ba4", fontSize: "14px", lineHeight: "1.6", margin: 0 }}>
-              If you have any questions, legal inquiries, or compliance concerns regarding these Terms of Use, please reach out through our official community server or send an email directly to{" "}
+              For legal inquiries regarding these Terms of Use, contact{" "}
               <a
                 href="mailto:legal@discapp.org"
                 style={{

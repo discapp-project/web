@@ -27,6 +27,7 @@ const paths = [
   "/timestamp-generator",
   "/user-lookup",
   "/vanity-checker",
+  "/vanity-url",
   "/webhook-builder",
   "/webhook-json-formatter",
 ];

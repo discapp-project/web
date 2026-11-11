@@ -72,6 +72,14 @@ const tools = [
     iconClass: 'vanity-icon'
   },
   {
+    title: 'Custom Vanity Link',
+    description: 'Claim one custom Discapp link for a Discord invite.',
+    category: 'Lookups & Utilities',
+    href: '/vanity-url',
+    icon: Link2,
+    iconClass: 'vanity-icon'
+  },
+  {
     title: 'Asset stealer',
     description: 'Steal assets from a Discord server.',
     category: 'Assets & Media',
