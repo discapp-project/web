@@ -296,13 +296,21 @@ export default function RoleIconBuilder() {
   const [iconOffsetX, setIconOffsetX] = useState(0);
   const [iconOffsetY, setIconOffsetY] = useState(0);
   const [iconRotation, setIconRotation] = useState(0);
+  const [iconFlipX, setIconFlipX] = useState(false);
+  const [iconFlipY, setIconFlipY] = useState(false);
   
   const [enableBorder, setEnableBorder] = useState(false);
   const [borderColor, setBorderColor] = useState("#FFFFFF");
+  const [useGradientBorder, setUseGradientBorder] = useState(false);
+  const [borderGradientEnd, setBorderGradientEnd] = useState("#57f287");
+  const [borderGradientAngle, setBorderGradientAngle] = useState(45);
   const [borderWidth, setBorderWidth] = useState(4);
   const [borderStyle, setBorderStyle] = useState("solid");
   const [enableInnerBorder, setEnableInnerBorder] = useState(false);
   const [innerBorderColor, setInnerBorderColor] = useState("#111214");
+  const [useGradientInnerBorder, setUseGradientInnerBorder] = useState(false);
+  const [innerBorderGradientEnd, setInnerBorderGradientEnd] = useState("#57f287");
+  const [innerBorderGradientAngle, setInnerBorderGradientAngle] = useState(45);
   const [innerBorderWidth, setInnerBorderWidth] = useState(1.5);
   
   const [enableGlow, setEnableGlow] = useState(false);
@@ -327,8 +335,10 @@ export default function RoleIconBuilder() {
     selectedIcon, customText, selectedShape, shapeScale, shapeRotation, shapeCornerRadius,
     bgColor, useGradientBg, bgGradientEnd, bgGradientAngle, iconColor, useGradientIcon,
     iconGradientEnd, iconGradientAngle, iconSize, iconStrokeWidth, iconOpacity, fontFamily,
-    fontWeight, iconOffsetX, iconOffsetY, iconRotation, enableBorder, borderColor,
-    borderWidth, borderStyle, enableInnerBorder, innerBorderColor, innerBorderWidth,
+    fontWeight, iconOffsetX, iconOffsetY, iconRotation, iconFlipX, iconFlipY,
+    enableBorder, borderColor, useGradientBorder, borderGradientEnd, borderGradientAngle,
+    borderWidth, borderStyle, enableInnerBorder, innerBorderColor, useGradientInnerBorder,
+    innerBorderGradientEnd, innerBorderGradientAngle, innerBorderWidth,
     enableGlow, glowColor, glowBlur, enableShadow, shadowColor, shadowOffsetX,
     shadowOffsetY, shadowBlur, uploadedImage, backgroundImage,
   });
@@ -373,12 +383,20 @@ export default function RoleIconBuilder() {
         setIconOffsetX(getNumber("iconOffsetX", 0, -20, 20));
         setIconOffsetY(getNumber("iconOffsetY", 0, -20, 20));
         setIconRotation(getNumber("iconRotation", 0, 0, 360));
+        setIconFlipX(getBoolean("iconFlipX", false));
+        setIconFlipY(getBoolean("iconFlipY", false));
         setEnableBorder(getBoolean("enableBorder", false));
         setBorderColor(getColor("borderColor", "#FFFFFF"));
+        setUseGradientBorder(getBoolean("useGradientBorder", false));
+        setBorderGradientEnd(getColor("borderGradientEnd", "#57f287"));
+        setBorderGradientAngle(getNumber("borderGradientAngle", 45, 0, 360));
         setBorderWidth(getNumber("borderWidth", 4, 1, 10));
         setBorderStyle(["solid", "dashed", "dotted"].includes(getString("borderStyle", "solid")) ? getString("borderStyle", "solid") : "solid");
         setEnableInnerBorder(getBoolean("enableInnerBorder", false));
         setInnerBorderColor(getColor("innerBorderColor", "#111214"));
+        setUseGradientInnerBorder(getBoolean("useGradientInnerBorder", false));
+        setInnerBorderGradientEnd(getColor("innerBorderGradientEnd", "#57f287"));
+        setInnerBorderGradientAngle(getNumber("innerBorderGradientAngle", 45, 0, 360));
         setInnerBorderWidth(getNumber("innerBorderWidth", 1.5, 0.5, 4));
         setEnableGlow(getBoolean("enableGlow", false));
         setGlowColor(getColor("glowColor", "#5865F2"));
@@ -485,10 +503,10 @@ export default function RoleIconBuilder() {
     image.src = blobURL;
   };
 
-  const getFilterStyle = () => {
+  const getFilterStyle = (scale = 1) => {
     const filters = [];
-    if (enableGlow) filters.push(`drop-shadow(0 0 ${glowBlur}px ${glowColor})`);
-    if (enableShadow) filters.push(`drop-shadow(${shadowOffsetX}px ${shadowOffsetY}px ${shadowBlur}px ${shadowColor})`);
+    if (enableGlow) filters.push(`drop-shadow(0 0 ${glowBlur * scale}px ${glowColor})`);
+    if (enableShadow) filters.push(`drop-shadow(${shadowOffsetX * scale}px ${shadowOffsetY * scale}px ${shadowBlur * scale}px ${shadowColor})`);
     return filters.length > 0 ? filters.join(" ") : "none";
   };
 
@@ -496,6 +514,187 @@ export default function RoleIconBuilder() {
     if (borderStyle === "dashed") return "6,6";
     if (borderStyle === "dotted") return "2,4";
     return "none";
+  };
+
+  const renderIconArtwork = (idPrefix: string) => {
+    const iconAngle = (iconRotation * Math.PI) / 180;
+    const rotationExtent = Math.abs(Math.cos(iconAngle)) + Math.abs(Math.sin(iconAngle));
+    const iconHalfExtent = (iconSize / 2) * rotationExtent + Math.max(Math.abs(iconOffsetX), Math.abs(iconOffsetY));
+    const filterPadding = Math.max(
+      enableGlow ? glowBlur * 2 : 0,
+      enableShadow ? Math.max(Math.abs(shadowOffsetX), Math.abs(shadowOffsetY)) + shadowBlur * 2 : 0
+    ) * (100 / 112);
+    const iconPadding = Math.max(
+      uploadedImage ? 1 : iconStrokeWidth / 2 + (enableInnerBorder ? innerBorderWidth : 0) + 1,
+      filterPadding
+    );
+    const iconFitScale = Math.min(1, (50 - iconPadding) / Math.max(iconHalfExtent, 1));
+    const shapeAngle = (shapeRotation * Math.PI) / 180;
+    const shapeRotationFit = 1 / Math.max(1, Math.abs(Math.cos(shapeAngle)) + Math.abs(Math.sin(shapeAngle)));
+    const shapePadding = Math.max(enableBorder ? borderWidth / 2 + 1 : 1, filterPadding);
+    const shapeFitScale = (100 - shapePadding * 2) / 100;
+    const fill = backgroundImage ? "none" : useGradientBg ? `url(#${idPrefix}-bg-gradient)` : bgColor;
+    const stroke = enableBorder ? (useGradientBorder ? `url(#${idPrefix}-border-gradient)` : borderColor) : "none";
+    const shapeRadius = currentShapeObj?.id === "rounded-square" ? shapeCornerRadius : currentShapeObj?.rx || "0";
+
+    return (
+      <>
+        <defs>
+          <clipPath id={`${idPrefix}-shape-clip`} clipPathUnits="userSpaceOnUse">
+            {currentShapeObj?.path ? (
+              <path d={currentShapeObj.path} />
+            ) : (
+              <rect x="0" y="0" width="100" height="100" rx={shapeRadius} />
+            )}
+          </clipPath>
+          <linearGradient
+            id={`${idPrefix}-bg-gradient`}
+            x1={`${Math.cos((bgGradientAngle * Math.PI) / 180) < 0 ? 100 : 0}%`}
+            y1={`${Math.sin((bgGradientAngle * Math.PI) / 180) < 0 ? 100 : 0}%`}
+            x2={`${Math.cos((bgGradientAngle * Math.PI) / 180) >= 0 ? 100 : 0}%`}
+            y2={`${Math.sin((bgGradientAngle * Math.PI) / 180) >= 0 ? 100 : 0}%`}
+          >
+            <stop offset="0%" stopColor={bgColor} />
+            <stop offset="100%" stopColor={bgGradientEnd} />
+          </linearGradient>
+          <linearGradient
+            id={`${idPrefix}-border-gradient`}
+            gradientUnits="userSpaceOnUse"
+            x1={50 - Math.cos((borderGradientAngle * Math.PI) / 180) * 50}
+            y1={50 - Math.sin((borderGradientAngle * Math.PI) / 180) * 50}
+            x2={50 + Math.cos((borderGradientAngle * Math.PI) / 180) * 50}
+            y2={50 + Math.sin((borderGradientAngle * Math.PI) / 180) * 50}
+          >
+            <stop offset="0%" stopColor={borderColor} />
+            <stop offset="100%" stopColor={borderGradientEnd} />
+          </linearGradient>
+          <linearGradient
+            id={`${idPrefix}-icon-gradient`}
+            gradientUnits="userSpaceOnUse"
+            x1={12 - Math.cos((iconGradientAngle * Math.PI) / 180) * 12}
+            y1={12 - Math.sin((iconGradientAngle * Math.PI) / 180) * 12}
+            x2={12 + Math.cos((iconGradientAngle * Math.PI) / 180) * 12}
+            y2={12 + Math.sin((iconGradientAngle * Math.PI) / 180) * 12}
+          >
+            <stop offset="0%" stopColor={iconColor} />
+            <stop offset="100%" stopColor={iconGradientEnd} />
+          </linearGradient>
+          <linearGradient
+            id={`${idPrefix}-text-gradient`}
+            gradientUnits="userSpaceOnUse"
+            x1={50 - Math.cos((iconGradientAngle * Math.PI) / 180) * 50}
+            y1={50 - Math.sin((iconGradientAngle * Math.PI) / 180) * 50}
+            x2={50 + Math.cos((iconGradientAngle * Math.PI) / 180) * 50}
+            y2={50 + Math.sin((iconGradientAngle * Math.PI) / 180) * 50}
+          >
+            <stop offset="0%" stopColor={iconColor} />
+            <stop offset="100%" stopColor={iconGradientEnd} />
+          </linearGradient>
+          <linearGradient
+            id={`${idPrefix}-inner-icon-border-gradient`}
+            gradientUnits="userSpaceOnUse"
+            x1={12 - Math.cos((innerBorderGradientAngle * Math.PI) / 180) * 12}
+            y1={12 - Math.sin((innerBorderGradientAngle * Math.PI) / 180) * 12}
+            x2={12 + Math.cos((innerBorderGradientAngle * Math.PI) / 180) * 12}
+            y2={12 + Math.sin((innerBorderGradientAngle * Math.PI) / 180) * 12}
+          >
+            <stop offset="0%" stopColor={innerBorderColor} />
+            <stop offset="100%" stopColor={innerBorderGradientEnd} />
+          </linearGradient>
+          <linearGradient
+            id={`${idPrefix}-inner-text-border-gradient`}
+            gradientUnits="userSpaceOnUse"
+            x1={50 - Math.cos((innerBorderGradientAngle * Math.PI) / 180) * 50}
+            y1={50 - Math.sin((innerBorderGradientAngle * Math.PI) / 180) * 50}
+            x2={50 + Math.cos((innerBorderGradientAngle * Math.PI) / 180) * 50}
+            y2={50 + Math.sin((innerBorderGradientAngle * Math.PI) / 180) * 50}
+          >
+            <stop offset="0%" stopColor={innerBorderColor} />
+            <stop offset="100%" stopColor={innerBorderGradientEnd} />
+          </linearGradient>
+        </defs>
+
+        <g transform={`translate(50, 50) scale(${(shapeScale / 100) * shapeFitScale * shapeRotationFit}) rotate(${shapeRotation}) translate(-50, -50)`}>
+          {backgroundImage && (
+            <image href={backgroundImage} x="0" y="0" width="100" height="100" preserveAspectRatio="xMidYMid slice" clipPath={`url(#${idPrefix}-shape-clip)`} />
+          )}
+          {currentShapeObj?.path ? (
+            <path
+              d={currentShapeObj.path}
+              fill={fill}
+              stroke={stroke}
+              strokeWidth={enableBorder ? borderWidth : 0}
+              strokeDasharray={getDashArray()}
+            />
+          ) : (
+            <rect
+              x="0"
+              y="0"
+              width="100"
+              height="100"
+              rx={shapeRadius}
+              fill={fill}
+              stroke={stroke}
+              strokeWidth={enableBorder ? borderWidth : 0}
+              strokeDasharray={getDashArray()}
+            />
+          )}
+        </g>
+
+        <g transform={`translate(50, 50) scale(${iconFitScale}) translate(-50, -50)`}>
+          <g
+            transform={`translate(${iconOffsetX}, ${iconOffsetY}) rotate(${iconRotation} 50 50)`}
+            opacity={iconOpacity / 100}
+          >
+            <g transform={`translate(50, 50) scale(${iconFlipX ? -1 : 1}, ${iconFlipY ? -1 : 1}) translate(-50, -50)`}>
+              {uploadedImage ? (
+                <image
+                  href={uploadedImage}
+                  x={50 - iconSize / 2}
+                  y={50 - iconSize / 2}
+                  width={iconSize}
+                  height={iconSize}
+                  preserveAspectRatio="xMidYMid slice"
+                />
+              ) : customText ? (
+                <text
+                  x="50%"
+                  y="50%"
+                  dominantBaseline="central"
+                  textAnchor="middle"
+                  fill={useGradientIcon ? `url(#${idPrefix}-text-gradient)` : iconColor}
+                  fontSize={Math.floor(iconSize * 0.5)}
+                  fontWeight={fontWeight}
+                  fontFamily={fontFamily}
+                  stroke={enableInnerBorder ? (useGradientInnerBorder ? `url(#${idPrefix}-inner-text-border-gradient)` : innerBorderColor) : undefined}
+                  strokeWidth={enableInnerBorder ? innerBorderWidth : undefined}
+                  paintOrder="stroke"
+                >
+                  {customText}
+                </text>
+              ) : (
+                <g transform={`translate(${50 - iconSize / 2}, ${50 - iconSize / 2})`}>
+                  {enableInnerBorder && (
+                    <SelectedIconComponent
+                      size={iconSize}
+                      color={innerBorderColor}
+                      stroke={useGradientInnerBorder ? `url(#${idPrefix}-inner-icon-border-gradient)` : innerBorderColor}
+                      strokeWidth={iconStrokeWidth + innerBorderWidth * 2}
+                    />
+                  )}
+                  <SelectedIconComponent
+                    size={iconSize}
+                    color={iconColor}
+                    stroke={useGradientIcon ? `url(#${idPrefix}-icon-gradient)` : iconColor}
+                    strokeWidth={iconStrokeWidth}
+                  />
+                </g>
+              )}
+            </g>
+          </g>
+        </g>
+      </>
+    );
   };
 
   return (
@@ -725,7 +924,38 @@ export default function RoleIconBuilder() {
                           }}
                         >
                           <svg viewBox="0 0 100 100" width="32" height="32" aria-hidden="true">
-                            {s.path ? <path d={s.path} fill={selectedShape === s.id ? bgColor : "#5865f2"} stroke={selectedShape === s.id && enableBorder ? borderColor : "#949ba4"} strokeWidth="4" /> : <rect x="4" y="4" width="92" height="92" rx={s.id === "rounded-square" ? shapeCornerRadius : s.rx || "0"} fill={selectedShape === s.id ? bgColor : "#5865f2"} stroke={selectedShape === s.id && enableBorder ? borderColor : "#949ba4"} strokeWidth="4" />}
+                            <defs>
+                              <linearGradient
+                                id="shapeBorderGrad"
+                                gradientUnits="userSpaceOnUse"
+                                x1={50 - Math.cos((borderGradientAngle * Math.PI) / 180) * 50}
+                                y1={50 - Math.sin((borderGradientAngle * Math.PI) / 180) * 50}
+                                x2={50 + Math.cos((borderGradientAngle * Math.PI) / 180) * 50}
+                                y2={50 + Math.sin((borderGradientAngle * Math.PI) / 180) * 50}
+                              >
+                                <stop offset="0%" stopColor={borderColor} />
+                                <stop offset="100%" stopColor={borderGradientEnd} />
+                              </linearGradient>
+                            </defs>
+                            {s.path ? (
+                              <path
+                                d={s.path}
+                                fill={selectedShape === s.id ? bgColor : "#5865f2"}
+                                stroke={selectedShape === s.id && enableBorder ? (useGradientBorder ? "url(#shapeBorderGrad)" : borderColor) : "#949ba4"}
+                                strokeWidth="4"
+                              />
+                            ) : (
+                              <rect
+                                x="4"
+                                y="4"
+                                width="92"
+                                height="92"
+                                rx={s.id === "rounded-square" ? shapeCornerRadius : s.rx || "0"}
+                                fill={selectedShape === s.id ? bgColor : "#5865f2"}
+                                stroke={selectedShape === s.id && enableBorder ? (useGradientBorder ? "url(#shapeBorderGrad)" : borderColor) : "#949ba4"}
+                                strokeWidth="4"
+                              />
+                            )}
                           </svg>
                         </button>
                       ))}
@@ -1048,6 +1278,26 @@ export default function RoleIconBuilder() {
                       />
                     </div>
                   </div>
+                  <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+                    <button
+                      type="button"
+                      aria-label="Flip icon left or right"
+                      aria-pressed={iconFlipX}
+                      onClick={() => setIconFlipX((flipped) => !flipped)}
+                      style={{ border: "1px solid #2b2d31", borderRadius: "0.25rem", padding: "0.4rem 0.6rem", color: iconFlipX ? "#57f287" : "#dbdee1", backgroundColor: iconFlipX ? "rgba(87, 242, 135, 0.1)" : "#111214", fontSize: "0.7rem", cursor: "pointer" }}
+                    >
+                      Flip Left / Right
+                    </button>
+                    <button
+                      type="button"
+                      aria-label="Flip icon up or down"
+                      aria-pressed={iconFlipY}
+                      onClick={() => setIconFlipY((flipped) => !flipped)}
+                      style={{ border: "1px solid #2b2d31", borderRadius: "0.25rem", padding: "0.4rem 0.6rem", color: iconFlipY ? "#57f287" : "#dbdee1", backgroundColor: iconFlipY ? "rgba(87, 242, 135, 0.1)" : "#111214", fontSize: "0.7rem", cursor: "pointer" }}
+                    >
+                      Flip Up / Down
+                    </button>
+                  </div>
 
                   <div style={{ borderTop: "1px solid #2b2d31", paddingTop: "0.75rem" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }}>
@@ -1062,30 +1312,68 @@ export default function RoleIconBuilder() {
                       </label>
                     </div>
                     {enableBorder && (
-                      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: "0.5rem", alignItems: "center" }}>
-                        <input
-                          type="color"
-                          value={borderColor}
-                          onChange={(e) => setBorderColor(e.target.value)}
-                          style={{ width: "2rem", height: "2rem", backgroundColor: "transparent", border: "none", cursor: "pointer" }}
-                        />
-                        <input
-                          type="range"
-                          min="1"
-                          max="10"
-                          value={borderWidth}
-                          onChange={(e) => setBorderWidth(Number(e.target.value))}
-                          style={{ accentColor: "#57f287" }}
-                        />
-                        <select
-                          value={borderStyle}
-                          onChange={(e) => setBorderStyle(e.target.value)}
-                          style={{ backgroundColor: "#111214", border: "1px solid #2b2d31", borderRadius: "0.25rem", color: "#ffffff", padding: "0.25rem" }}
-                        >
-                          <option value="solid">Solid</option>
-                          <option value="dashed">Dashed</option>
-                          <option value="dotted">Dotted</option>
-                        </select>
+                      <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                          <button
+                            type="button"
+                            aria-pressed={useGradientBorder}
+                            onClick={() => setUseGradientBorder((enabled) => !enabled)}
+                            style={{ fontSize: "0.65rem", color: "#57f287", background: "none", border: "none", cursor: "pointer" }}
+                          >
+                            {useGradientBorder ? "Use Solid Color" : "Enable Gradient"}
+                          </button>
+                        </div>
+                        <div style={{ display: "grid", gridTemplateColumns: `repeat(${useGradientBorder ? 4 : 3}, minmax(0, 1fr))`, gap: "0.5rem", alignItems: "center" }}>
+                          <input
+                            type="color"
+                            aria-label="Outer border color"
+                            value={borderColor}
+                            onChange={(e) => setBorderColor(e.target.value)}
+                            style={{ width: "2rem", height: "2rem", backgroundColor: "transparent", border: "none", cursor: "pointer" }}
+                          />
+                          {useGradientBorder && (
+                            <input
+                              type="color"
+                              aria-label="Outer border gradient end color"
+                              value={borderGradientEnd}
+                              onChange={(e) => setBorderGradientEnd(e.target.value)}
+                              style={{ width: "2rem", height: "2rem", backgroundColor: "transparent", border: "none", cursor: "pointer" }}
+                            />
+                          )}
+                          <input
+                            type="range"
+                            aria-label="Outer border width"
+                            min="1"
+                            max="10"
+                            value={borderWidth}
+                            onChange={(e) => setBorderWidth(Number(e.target.value))}
+                            style={{ accentColor: "#57f287" }}
+                          />
+                          <select
+                            aria-label="Outer border style"
+                            value={borderStyle}
+                            onChange={(e) => setBorderStyle(e.target.value)}
+                            style={{ backgroundColor: "#111214", border: "1px solid #2b2d31", borderRadius: "0.25rem", color: "#ffffff", padding: "0.25rem" }}
+                          >
+                            <option value="solid">Solid</option>
+                            <option value="dashed">Dashed</option>
+                            <option value="dotted">Dotted</option>
+                          </select>
+                        </div>
+                        {useGradientBorder && (
+                          <div>
+                            <label style={{ fontSize: "0.65rem", color: "#b5bac1" }}>Outline Gradient Angle ({borderGradientAngle}°)</label>
+                            <input
+                              type="range"
+                              aria-label="Outline gradient angle"
+                              min="0"
+                              max="360"
+                              value={borderGradientAngle}
+                              onChange={(e) => setBorderGradientAngle(Number(e.target.value))}
+                              style={{ width: "100%", accentColor: "#57f287" }}
+                            />
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
@@ -1103,25 +1391,58 @@ export default function RoleIconBuilder() {
                       </label>
                     </div>
                     {enableInnerBorder && (
-                      <div style={{ display: "grid", gridTemplateColumns: "2.5rem minmax(0, 1fr) auto", gap: "0.75rem", alignItems: "center" }}>
-                        <input
-                          type="color"
-                          aria-label="Inner icon border color"
-                          value={innerBorderColor}
-                          onChange={(e) => setInnerBorderColor(e.target.value)}
-                          style={{ width: "2rem", height: "2rem", backgroundColor: "transparent", border: "none", cursor: "pointer" }}
-                        />
-                        <input
-                          type="range"
-                          aria-label="Inner icon border width"
-                          min="0.5"
-                          max="4"
-                          step="0.5"
-                          value={innerBorderWidth}
-                          onChange={(e) => setInnerBorderWidth(Number(e.target.value))}
-                          style={{ width: "100%", accentColor: "#57f287" }}
-                        />
-                        <span style={{ minWidth: "2.5rem", color: "#949ba4", fontSize: "0.7rem" }}>{innerBorderWidth}px</span>
+                      <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                        <button
+                          type="button"
+                          aria-pressed={useGradientInnerBorder}
+                          onClick={() => setUseGradientInnerBorder((enabled) => !enabled)}
+                          style={{ alignSelf: "flex-start", fontSize: "0.65rem", color: "#57f287", background: "none", border: "none", cursor: "pointer" }}
+                        >
+                          {useGradientInnerBorder ? "Use Solid Color" : "Enable Gradient"}
+                        </button>
+                        <div style={{ display: "grid", gridTemplateColumns: `repeat(${useGradientInnerBorder ? 4 : 3}, minmax(0, 1fr))`, gap: "0.5rem", alignItems: "center" }}>
+                          <input
+                            type="color"
+                            aria-label="Inner icon border color"
+                            value={innerBorderColor}
+                            onChange={(e) => setInnerBorderColor(e.target.value)}
+                            style={{ width: "2rem", height: "2rem", backgroundColor: "transparent", border: "none", cursor: "pointer" }}
+                          />
+                          {useGradientInnerBorder && (
+                            <input
+                              type="color"
+                              aria-label="Inner icon border gradient end color"
+                              value={innerBorderGradientEnd}
+                              onChange={(e) => setInnerBorderGradientEnd(e.target.value)}
+                              style={{ width: "2rem", height: "2rem", backgroundColor: "transparent", border: "none", cursor: "pointer" }}
+                            />
+                          )}
+                          <input
+                            type="range"
+                            aria-label="Inner icon border width"
+                            min="0.5"
+                            max="4"
+                            step="0.5"
+                            value={innerBorderWidth}
+                            onChange={(e) => setInnerBorderWidth(Number(e.target.value))}
+                            style={{ width: "100%", accentColor: "#57f287" }}
+                          />
+                          <span style={{ minWidth: "2.5rem", color: "#949ba4", fontSize: "0.7rem" }}>{innerBorderWidth}px</span>
+                        </div>
+                        {useGradientInnerBorder && (
+                          <div>
+                            <label style={{ fontSize: "0.65rem", color: "#b5bac1" }}>Inner Border Gradient Angle ({innerBorderGradientAngle}°)</label>
+                            <input
+                              type="range"
+                              aria-label="Inner icon border gradient angle"
+                              min="0"
+                              max="360"
+                              value={innerBorderGradientAngle}
+                              onChange={(e) => setInnerBorderGradientAngle(Number(e.target.value))}
+                              style={{ width: "100%", accentColor: "#57f287" }}
+                            />
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
@@ -1239,7 +1560,10 @@ export default function RoleIconBuilder() {
               >
                 <svg
                   ref={svgRef}
+                  width="128"
+                  height="128"
                   viewBox="0 0 100 100"
+                  overflow="visible"
                   style={{ 
                     width: "7rem", 
                     height: "7rem", 
@@ -1247,124 +1571,7 @@ export default function RoleIconBuilder() {
                   }}
                   xmlns="http://www.w3.org/2000/svg"
                 >
-                  <defs>
-                    <clipPath id="shapeClip" clipPathUnits="userSpaceOnUse">
-                      {currentShapeObj?.path ? (
-                        <path d={currentShapeObj.path} />
-                      ) : (
-                        <rect x="0" y="0" width="100" height="100" rx={currentShapeObj?.id === "rounded-square" ? shapeCornerRadius : currentShapeObj?.rx || "0"} />
-                      )}
-                    </clipPath>
-                    <linearGradient 
-                      id="bgGrad" 
-                      x1={`${Math.cos((bgGradientAngle * Math.PI) / 180) < 0 ? 100 : 0}%`}
-                      y1={`${Math.sin((bgGradientAngle * Math.PI) / 180) < 0 ? 100 : 0}%`}
-                      x2={`${Math.cos((bgGradientAngle * Math.PI) / 180) >= 0 ? 100 : 0}%`}
-                      y2={`${Math.sin((bgGradientAngle * Math.PI) / 180) >= 0 ? 100 : 0}%`}
-                    >
-                      <stop offset="0%" stopColor={bgColor} />
-                      <stop offset="100%" stopColor={bgGradientEnd} />
-                    </linearGradient>
-
-                    <linearGradient 
-                      id="iconGrad" 
-                      gradientUnits="userSpaceOnUse"
-                      x1={12 - Math.cos((iconGradientAngle * Math.PI) / 180) * 12}
-                      y1={12 - Math.sin((iconGradientAngle * Math.PI) / 180) * 12}
-                      x2={12 + Math.cos((iconGradientAngle * Math.PI) / 180) * 12}
-                      y2={12 + Math.sin((iconGradientAngle * Math.PI) / 180) * 12}
-                    >
-                      <stop offset="0%" stopColor={iconColor} />
-                      <stop offset="100%" stopColor={iconGradientEnd} />
-                    </linearGradient>
-
-                    <linearGradient
-                      id="textGrad"
-                      gradientUnits="userSpaceOnUse"
-                      x1={50 - Math.cos((iconGradientAngle * Math.PI) / 180) * 50}
-                      y1={50 - Math.sin((iconGradientAngle * Math.PI) / 180) * 50}
-                      x2={50 + Math.cos((iconGradientAngle * Math.PI) / 180) * 50}
-                      y2={50 + Math.sin((iconGradientAngle * Math.PI) / 180) * 50}
-                    >
-                      <stop offset="0%" stopColor={iconColor} />
-                      <stop offset="100%" stopColor={iconGradientEnd} />
-                    </linearGradient>
-                  </defs>
-
-                  <g transform={`translate(50, 50) scale(${shapeScale / 100}) rotate(${shapeRotation}) translate(-50, -50)`}>
-                    {backgroundImage && (
-                      <image href={backgroundImage} x="0" y="0" width="100" height="100" preserveAspectRatio="xMidYMid slice" clipPath="url(#shapeClip)" />
-                    )}
-                    {currentShapeObj?.path ? (
-                      <path 
-                        d={currentShapeObj.path} 
-                        fill={backgroundImage ? "none" : useGradientBg ? "url(#bgGrad)" : bgColor}
-                        stroke={enableBorder ? borderColor : "none"}
-                        strokeWidth={enableBorder ? borderWidth : 0}
-                        strokeDasharray={getDashArray()}
-                      />
-                    ) : (
-                      <rect
-                        x="0"
-                        y="0"
-                        width="100"
-                        height="100"
-                        rx={currentShapeObj?.id === "rounded-square" ? shapeCornerRadius : currentShapeObj?.rx || "0"}
-                        fill={backgroundImage ? "none" : useGradientBg ? "url(#bgGrad)" : bgColor}
-                        stroke={enableBorder ? borderColor : "none"}
-                        strokeWidth={enableBorder ? borderWidth : 0}
-                        strokeDasharray={getDashArray()}
-                      />
-                    )}
-                  </g>
-
-                  <g 
-                    transform={`translate(${iconOffsetX}, ${iconOffsetY}) rotate(${iconRotation} 50 50)`}
-                    opacity={iconOpacity / 100}
-                  >
-                    {uploadedImage ? (
-                      <image
-                        href={uploadedImage}
-                        x={50 - iconSize / 2}
-                        y={50 - iconSize / 2}
-                        width={iconSize}
-                        height={iconSize}
-                        preserveAspectRatio="xMidYMid slice"
-                      />
-                    ) : customText ? (
-                      <text
-                        x="50%"
-                        y="50%"
-                        dominantBaseline="central"
-                        textAnchor="middle"
-                        fill={useGradientIcon ? "url(#textGrad)" : iconColor}
-                        fontSize={Math.floor(iconSize * 0.5)}
-                        fontWeight={fontWeight}
-                        fontFamily={fontFamily}
-                        stroke={enableInnerBorder ? innerBorderColor : undefined}
-                        strokeWidth={enableInnerBorder ? innerBorderWidth : undefined}
-                        paintOrder="stroke"
-                      >
-                        {customText}
-                      </text>
-                    ) : (
-                      <g transform={`translate(${50 - iconSize / 2}, ${50 - iconSize / 2})`}>
-                        {enableInnerBorder && (
-                          <SelectedIconComponent
-                            size={iconSize}
-                            color={innerBorderColor}
-                            strokeWidth={iconStrokeWidth + innerBorderWidth * 2}
-                          />
-                        )}
-                        <SelectedIconComponent
-                          size={iconSize}
-                          color={iconColor}
-                          stroke={useGradientIcon ? "url(#iconGrad)" : iconColor}
-                          strokeWidth={iconStrokeWidth}
-                        />
-                      </g>
-                    )}
-                  </g>
+                  {renderIconArtwork("export-icon")}
                 </svg>
               </div>
             </div>
@@ -1381,56 +1588,13 @@ export default function RoleIconBuilder() {
                 <div style={{ flex: 1 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "0.375rem", lineHeight: 1 }}>
                     <span style={{ fontWeight: 600, color: "#ffffff" }}>Soul</span>
-                    <svg viewBox="0 0 100 100" style={{ width: "1rem", height: "1rem", display: "inline-block" }}>
-                      <defs>
-                        <clipPath id="previewShapeClip" clipPathUnits="userSpaceOnUse">
-                          {currentShapeObj?.path ? (
-                            <path d={currentShapeObj.path} />
-                          ) : (
-                            <rect x="0" y="0" width="100" height="100" rx={currentShapeObj?.id === "rounded-square" ? shapeCornerRadius : currentShapeObj?.rx || "0"} />
-                          )}
-                        </clipPath>
-                        <linearGradient
-                          id="previewIconGrad"
-                          gradientUnits="userSpaceOnUse"
-                          x1={12 - Math.cos((iconGradientAngle * Math.PI) / 180) * 12}
-                          y1={12 - Math.sin((iconGradientAngle * Math.PI) / 180) * 12}
-                          x2={12 + Math.cos((iconGradientAngle * Math.PI) / 180) * 12}
-                          y2={12 + Math.sin((iconGradientAngle * Math.PI) / 180) * 12}
-                        >
-                          <stop offset="0%" stopColor={iconColor} />
-                          <stop offset="100%" stopColor={iconGradientEnd} />
-                        </linearGradient>
-                        <linearGradient
-                          id="previewTextGrad"
-                          gradientUnits="userSpaceOnUse"
-                          x1={50 - Math.cos((iconGradientAngle * Math.PI) / 180) * 50}
-                          y1={50 - Math.sin((iconGradientAngle * Math.PI) / 180) * 50}
-                          x2={50 + Math.cos((iconGradientAngle * Math.PI) / 180) * 50}
-                          y2={50 + Math.sin((iconGradientAngle * Math.PI) / 180) * 50}
-                        >
-                          <stop offset="0%" stopColor={iconColor} />
-                          <stop offset="100%" stopColor={iconGradientEnd} />
-                        </linearGradient>
-                      </defs>
-                      {backgroundImage && <image href={backgroundImage} x="0" y="0" width="100" height="100" preserveAspectRatio="xMidYMid slice" clipPath="url(#previewShapeClip)" />}
-                      {currentShapeObj?.path ? (
-                        <path d={currentShapeObj.path} fill={backgroundImage ? "none" : bgColor} stroke={enableBorder ? borderColor : "none"} strokeWidth={enableBorder ? borderWidth : 0} strokeDasharray={getDashArray()} />
-                      ) : (
-                        <rect x="0" y="0" width="100" height="100" rx={currentShapeObj?.id === "rounded-square" ? shapeCornerRadius : currentShapeObj?.rx || "0"} fill={backgroundImage ? "none" : bgColor} stroke={enableBorder ? borderColor : "none"} strokeWidth={enableBorder ? borderWidth : 0} strokeDasharray={getDashArray()} />
-                      )}
-                      {uploadedImage ? (
-                        <image href={uploadedImage} x="20" y="20" width="60" height="60" />
-                      ) : customText ? (
-                        <text x="50%" y="50%" dominantBaseline="central" textAnchor="middle" fill={useGradientIcon ? "url(#previewTextGrad)" : iconColor} fontSize="40" fontWeight={fontWeight} fontFamily={fontFamily} stroke={enableInnerBorder ? innerBorderColor : undefined} strokeWidth={enableInnerBorder ? innerBorderWidth : undefined} paintOrder="stroke">
-                          {customText}
-                        </text>
-                      ) : (
-                        <g transform={`translate(${50 - iconSize / 2}, ${50 - iconSize / 2})`}>
-                          {enableInnerBorder && <SelectedIconComponent size={iconSize} color={innerBorderColor} strokeWidth={iconStrokeWidth + innerBorderWidth * 2} />}
-                          <SelectedIconComponent size={iconSize} color={iconColor} stroke={useGradientIcon ? "url(#previewIconGrad)" : iconColor} strokeWidth={iconStrokeWidth} />
-                        </g>
-                      )}
+                    <svg
+                      viewBox="0 0 100 100"
+                      role="img"
+                      aria-label="Discord role icon preview"
+                      style={{ width: "1rem", height: "1rem", display: "inline-block", filter: getFilterStyle(1 / 7) }}
+                    >
+                      {renderIconArtwork("discord-preview")}
                     </svg>
                     <span style={{ fontSize: "10px", color: "#949ba4", fontWeight: 500, marginLeft: "0.25rem" }}>Today at 1:00 PM</span>
                   </div>
