@@ -12,6 +12,21 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+function isSameOriginRequest(request: Request) {
+  const origin = request.headers.get("origin");
+  const requestHost = request.headers.get("x-forwarded-host")?.split(",")[0].trim()
+    ?? request.headers.get("host")?.trim();
+  if (!origin || !requestHost) return false;
+
+  try {
+    const parsedOrigin = new URL(origin);
+    return (parsedOrigin.protocol === "https:" || parsedOrigin.protocol === "http:")
+      && parsedOrigin.host.toLowerCase() === requestHost.toLowerCase();
+  } catch {
+    return false;
+  }
+}
+
 function parseWebhookUrl(value: unknown) {
   if (typeof value !== "string" || value.length > 512) return null;
   try {
@@ -159,6 +174,13 @@ async function discordError(response: Response) {
 }
 
 export async function POST(request: Request) {
+  if (!isSameOriginRequest(request)) {
+    return NextResponse.json({ message: "Invalid request origin." }, { status: 403 });
+  }
+  if (request.headers.get("content-type")?.split(";")[0].trim().toLowerCase() !== "application/json") {
+    return NextResponse.json({ message: "Content-Type must be application/json." }, { status: 415 });
+  }
+
   let body: unknown;
   try {
     const text = await readLimitedBody(request, maxRequestBodyBytes);

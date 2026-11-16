@@ -21,6 +21,21 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+function isSameOriginRequest(request: Request) {
+  const origin = request.headers.get("origin");
+  const requestHost = request.headers.get("x-forwarded-host")?.split(",")[0].trim()
+    ?? request.headers.get("host")?.trim();
+  if (!origin || !requestHost) return false;
+
+  try {
+    const parsedOrigin = new URL(origin);
+    return (parsedOrigin.protocol === "https:" || parsedOrigin.protocol === "http:")
+      && parsedOrigin.host.toLowerCase() === requestHost.toLowerCase();
+  } catch {
+    return false;
+  }
+}
+
 function parseWebhookUrl(value: unknown) {
   if (typeof value !== "string" || value.length > 512) return null;
   try {
@@ -239,6 +254,13 @@ async function parseIncomingRequest(request: Request): Promise<IncomingRequest> 
 }
 
 export async function POST(request: Request) {
+  if (!isSameOriginRequest(request)) {
+    return NextResponse.json({ message: "Invalid request origin." }, { status: 403 });
+  }
+  if (request.headers.get("content-type")?.split(";")[0].trim().toLowerCase() !== "application/json") {
+    return NextResponse.json({ message: "Content-Type must be application/json." }, { status: 415 });
+  }
+
   const contentLength = Number(request.headers.get("content-length") ?? 0);
   if (Number.isFinite(contentLength) && contentLength > maxJsonBodyBytes) {
     return NextResponse.json({ message: "Request is too large. Keep the webhook payload under 128 KB." }, { status: 413 });
@@ -297,6 +319,13 @@ export async function POST(request: Request) {
 }
 
 export async function PATCH(request: Request) {
+  if (!isSameOriginRequest(request)) {
+    return NextResponse.json({ message: "Invalid request origin." }, { status: 403 });
+  }
+  if (request.headers.get("content-type")?.split(";")[0].trim().toLowerCase() !== "application/json") {
+    return NextResponse.json({ message: "Content-Type must be application/json." }, { status: 415 });
+  }
+
   let body: unknown;
   try {
     const text = await readLimitedBody(request, maxJsonBodyBytes);

@@ -15,9 +15,10 @@ Copy `.env.example` to `.env.local` and provide credentials for the services you
 | `NEXT_PUBLIC_HCAPTCHA_SITE_KEY` | CAPTCHA widget | Public hCaptcha site key; it is included in browser code and is not a secret. |
 | `BUG_HOOK` | Bug reports | Server-only Discord webhook URL that receives reports. |
 | `NEXT_PUBLIC_SUPABASE_URL` | Supabase Auth and database | Public Supabase project URL. |
-| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Supabase Auth and database | Public publishable key; access is controlled by Row Level Security. Never expose a service-role or secret key. |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Supabase Auth and database | Public publishable key; access is controlled by Row Level Security. |
+| `SUPABASE_SECRET_KEY` | Account deletion API | Server-only Supabase secret key used to remove account data and the Auth user.
 
-Keep secrets out of source control and `NEXT_PUBLIC_` variables. The Supabase URL and publishable key are public by design; do not expose service-role or secret keys. `.env.local` is ignored by Git.
+Keep secrets out of source control and `NEXT_PUBLIC_` variables. The Supabase URL and publishable key are public by design; do not expose service-role or secret keys. `.env.local` is ignored by Git. In Vercel, keep `SUPABASE_SECRET_KEY` server-only, mark it Sensitive when available, and scope it to Production; do not expose it to untrusted Preview deployments or fork builds.
 
 Tests use Vitest and React Testing Library, with `*.test.ts` and `*.test.tsx` files alongside the source.
 

@@ -1,7 +1,7 @@
 "use client";
 
-import { LoaderCircle, LogIn, LogOut, UserRound } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { LoaderCircle, LogIn, LogOut, Trash2, UserRound } from "lucide-react";
+import { type FormEvent, useEffect, useRef, useState } from "react";
 import { createClient, signInWithDiscord, signOut } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { parseDiscappProfile, type DiscappProfile } from "@/lib/supabase/profile-validation";
@@ -15,7 +15,10 @@ export default function AuthControl() {
   const [profile, setProfile] = useState<DiscappProfile | null>(null);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
+  const [confirmation, setConfirmation] = useState("");
+  const [deleteMessage, setDeleteMessage] = useState("");
   const accountMenuRef = useRef<HTMLDetailsElement>(null);
+  const deleteDialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
     function closeMenuOnOutsideClick(event: PointerEvent) {
@@ -124,6 +127,54 @@ export default function AuthControl() {
     }
   }
 
+  function openDeleteDialog() {
+    setConfirmation("");
+    setDeleteMessage("");
+    if (accountMenuRef.current) accountMenuRef.current.open = false;
+    deleteDialogRef.current?.showModal();
+  }
+
+  function closeDeleteDialog() {
+    if (busy) return;
+    deleteDialogRef.current?.close();
+  }
+
+  async function handleDeleteAccount(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (confirmation !== "confirm" || busy) return;
+
+    setBusy(true);
+    setDeleteMessage("");
+    try {
+      const response = await fetch("/api/account", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ confirmation }),
+      });
+
+      if (!response.ok) {
+        const result: unknown = await response.json().catch(() => null);
+        const serverMessage = result && typeof result === "object" && "message" in result
+          && typeof result.message === "string" ? result.message : null;
+        setDeleteMessage(serverMessage ?? "Your account could not be deleted. Please try again.");
+        return;
+      }
+
+      deleteDialogRef.current?.close();
+      setProfile(null);
+      setStatus("signed-out");
+      setMessage("");
+      try {
+        await signOut();
+      } catch {
+      }
+    } catch {
+      setDeleteMessage("Your account could not be deleted. Please check your connection and try again.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
   if (status === "unavailable") {
     return (
       <div className="auth-control">
@@ -168,6 +219,15 @@ export default function AuthControl() {
               <LogOut size={15} aria-hidden="true" />
               <span>{busy ? "Signing out…" : "Sign out"}</span>
             </button>
+            <button
+              className="auth-control-dropdown-action auth-control-dropdown-danger"
+              type="button"
+              onClick={openDeleteDialog}
+              disabled={busy}
+            >
+              <Trash2 size={15} aria-hidden="true" />
+              <span>Delete account</span>
+            </button>
           </div>
         </details>
       ) : (
@@ -182,6 +242,39 @@ export default function AuthControl() {
         </button>
       )}
       {message && <span className="auth-control-message" role="alert">{message}</span>}
+      <dialog
+        className="account-delete-dialog"
+        ref={deleteDialogRef}
+        aria-labelledby="account-delete-title"
+        onClose={() => setConfirmation("")}
+      >
+        <h2 id="account-delete-title">Delete your account?</h2>
+        <p>
+          This will delete your account and all associated data.  Bug reports details are kept to continue fixing issues. We cannot recover any of your data after deletion.
+        </p>
+        <form className="account-delete-form" onSubmit={handleDeleteAccount}>
+          <label className="account-delete-field">
+            <span>Type <strong>confirm</strong> to continue</span>
+            <input
+              autoFocus
+              autoComplete="off"
+              spellCheck={false}
+              value={confirmation}
+              onChange={(event) => setConfirmation(event.target.value)}
+              disabled={busy}
+            />
+          </label>
+          {deleteMessage && <p className="account-delete-error" role="alert">{deleteMessage}</p>}
+          <div className="account-delete-actions">
+            <button className="account-delete-cancel" type="button" onClick={closeDeleteDialog} disabled={busy}>
+              Cancel
+            </button>
+            <button className="account-delete-submit" type="submit" disabled={busy || confirmation !== "confirm"}>
+              {busy ? "Deleting…" : "Delete account"}
+            </button>
+          </div>
+        </form>
+      </dialog>
     </div>
   );
 }
