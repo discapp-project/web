@@ -1,7 +1,7 @@
 "use client";
 
 import { Copy, ExternalLink, Link2, LoaderCircle, LogIn, Save, Trash2 } from "lucide-react";
-import { startTransition, useEffect, useState, useSyncExternalStore, type FormEvent } from "react";
+import { startTransition, useEffect, useEffectEvent, useState, useSyncExternalStore, type FormEvent } from "react";
 import { createClient, signInWithDiscord } from "@/lib/supabase/client";
 import {
   maxVanityDescriptionLength,
@@ -86,22 +86,54 @@ export default function VanityLinkManager() {
     }
   }
 
-  async function loadExistingLink(): Promise<"loaded" | "empty" | "error"> {
-    const response = await fetch("/api/vanity-links", { cache: "no-store" });
-    const body: unknown = await response.json();
-    if (!response.ok) {
-      setStatus(messageFromResponse(body) ?? "Could not check your existing link.", true);
+  async function loadExistingLink(isActive: () => boolean = () => true): Promise<"loaded" | "empty" | "error"> {
+    try {
+      const response = await fetch("/api/vanity-links", { cache: "no-store" });
+      const body: unknown = await response.json();
+      if (!isActive()) return "error";
+      if (!response.ok) {
+        setStatus(messageFromResponse(body) ?? "Could not check your existing link.", true);
+        return "error";
+      }
+
+      const existing = parseSavedVanityLink(valueFromRecord(body, "link"));
+      if (!existing) return "empty";
+
+      setLink(existing);
+      setForm(existing);
+      setStatus("You already have a link claimed! Review it, then save changes to replace it.", false);
+      return "loaded";
+    } catch {
+      if (isActive()) setStatus("Could not check your existing link. Please try again.", true);
       return "error";
     }
-
-    const existing = parseSavedVanityLink(valueFromRecord(body, "link"));
-    if (!existing) return "empty";
-
-    setLink(existing);
-    setForm(existing);
-    setStatus("You already have a link claimed! Review it, then save changes to replace it.", false);
-    return "loaded";
   }
+
+  const checkSignedInLink = useEffectEvent(async (isActive: () => boolean) => {
+    try {
+      const supabase = createClient();
+      const { data, error } = await supabase.auth.getSession();
+      if (!isActive()) return;
+      if (error) {
+        setStatus("Could not verify sign-in. Please try again.", true);
+        return;
+      }
+      if (data.session) await loadExistingLink(isActive);
+    } catch {
+      if (isActive()) setStatus("Could not check your existing link. Please try again.", true);
+    }
+  });
+
+  useEffect(() => {
+    let active = true;
+    const timer = window.setTimeout(() => {
+      void checkSignedInLink(() => active);
+    }, 0);
+    return () => {
+      active = false;
+      window.clearTimeout(timer);
+    };
+  }, []);
 
   async function handleClaim(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
