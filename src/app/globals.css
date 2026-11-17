@@ -489,7 +489,7 @@ a.preview-embed-title:hover { text-decoration: underline; }
 .automod-severity { font-size: 9px; font-weight: 600; }
 .severity-critical { color: #e99ba3; }.severity-high { color: #e3bd7d; }.severity-medium { color: var(--accent); }
 .automod-rule > strong { color: var(--text); font-size: 11px; font-weight: 600; }
-.automod-rule-description { display: -webkit-box; overflow: hidden; color: var(--muted); font-size: 10px; line-height: 1.45; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.automod-rule-description { display: -webkit-box; overflow: hidden; color: var(--muted); font-size: 10px; line-height: 1.45; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; }
 .automod-no-results { border-top: 1px solid var(--line); padding: 15px 8px; color: var(--muted); font-size: 11px; }
 .automod-detail-column { min-width: 0; display: flex; flex-direction: column; gap: 24px; }
 .automod-detail { min-width: 0; }
