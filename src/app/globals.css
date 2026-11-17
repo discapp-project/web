@@ -190,7 +190,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
 .vanity-manager-input-prefix:has(.tool-input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
 .vanity-manager-hint, .vanity-manager-count { color: var(--subtle); font-size: 10px; font-weight: 400; line-height: 1.45; }
 .vanity-manager-count { align-self: flex-end; }
-.vanity-manager-description { min-height: 132px; height: auto; padding: 9px 10px; line-height: 1.5; resize: vertical; }
+.vanity-manager-description { min-height: 40px; max-height: 132px; height: 40px; padding: 9px 10px; line-height: 1.5; overflow-y: hidden; resize: none; }
 .vanity-manager-auth-prompt { display: flex; align-items: center; justify-content: space-between; gap: 16px; border-top: 1px solid var(--line); padding-top: 14px; }
 .vanity-manager-auth-prompt p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.5; }
 .vanity-manager-actions { display: flex; flex-wrap: wrap; gap: 9px; border-top: 1px solid var(--line); padding-top: 14px; }
@@ -205,6 +205,13 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
 .vanity-manager-copy { width: 32px; height: 32px; display: grid; flex: 0 0 auto; place-items: center; border: 1px solid var(--line-strong); border-radius: 4px; color: var(--muted); background: transparent; cursor: pointer; }
 .vanity-manager-copy:hover { border-color: var(--accent-line); color: var(--accent); }
 .vanity-manager-target, .vanity-manager-message { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.5; overflow-wrap: anywhere; }
+.vanity-embed-preview { display: flex; flex-direction: column; gap: 9px; }
+.vanity-embed-preview-heading { margin: 0; color: var(--muted); font-size: 11px; font-weight: 600; }
+.vanity-embed-preview-card { max-width: 480px; border-left: 4px solid; border-radius: 3px; padding: 12px 14px; background: #2b2d31; }
+.vanity-embed-preview-site, .vanity-embed-preview-url { color: #b5bac1; font-size: 10px; }
+.vanity-embed-preview-title { margin: 6px 0; color: #00a8fc; font-size: 13px; font-weight: 600; line-height: 1.4; overflow-wrap: anywhere; }
+.vanity-embed-preview-description { margin: 0 0 8px; color: #dbdee1; font-size: 11px; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; }
+.vanity-embed-preview-url { display: block; overflow-wrap: anywhere; }
 .vanity-manager-message.is-error { color: #f0b5bc; }
 .vanity-manager-loading { width: 38px; height: 38px; display: grid; place-items: center; color: var(--muted); }
 .vanity-manager-loading svg { animation: auth-control-spin .7s linear infinite; }

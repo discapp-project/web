@@ -1,3 +1,5 @@
+export const vanityEmbedColor = "#acf6c8";
+
 export type VanityPreview = {
   slug: string;
   inviteCode: string;
@@ -30,10 +32,9 @@ export function createVanityPreviewHtml(link: VanityPreview): string {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>${title}</title>
   <meta name="description" content="${description}">
-  <meta property="og:type" content="website">
+  <meta name="theme-color" content="${vanityEmbedColor}">
   <meta property="og:title" content="${title}">
   <meta property="og:description" content="${description}">
-  <meta property="og:url" content="${canonicalUrl}">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="${title}">
   <meta name="twitter:description" content="${description}">

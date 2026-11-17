@@ -1,8 +1,9 @@
 "use client";
 
 import { Copy, ExternalLink, Link2, LoaderCircle, LogIn, Save, Trash2 } from "lucide-react";
-import { startTransition, useEffect, useEffectEvent, useState, useSyncExternalStore, type FormEvent } from "react";
+import { startTransition, useEffect, useEffectEvent, useRef, useState, useSyncExternalStore, type FormEvent } from "react";
 import { createClient, signInWithDiscord } from "@/lib/supabase/client";
+import { vanityEmbedColor } from "@/lib/vanity-links/preview";
 import {
   maxVanityDescriptionLength,
   maxVanityTitleLength,
@@ -47,6 +48,18 @@ export default function VanityLinkManager() {
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
   const siteOrigin = useSyncExternalStore(subscribeToOrigin, getBrowserOrigin, getServerOrigin);
+  const descriptionRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    const textarea = descriptionRef.current;
+    if (!textarea) return;
+
+    textarea.style.height = "40px";
+    const maxHeight = 132;
+    const nextHeight = Math.min(textarea.scrollHeight, maxHeight);
+    textarea.style.height = `${nextHeight}px`;
+    textarea.style.overflowY = textarea.scrollHeight > maxHeight ? "auto" : "hidden";
+  }, [form.description]);
 
   useEffect(() => {
     let savedDraft: unknown;
@@ -326,15 +339,28 @@ export default function VanityLinkManager() {
                 <textarea
                   id="vanity-description"
                   className="tool-input vanity-manager-description"
+                  ref={descriptionRef}
                   value={form.description}
                   onChange={(event) => updateField("description", event.target.value)}
                   maxLength={maxVanityDescriptionLength}
-                  rows={5}
+                  rows={1}
                 />
                 <span className="vanity-manager-count">{form.description.length}/{maxVanityDescriptionLength}</span>
               </label>
             </div>
           </div>
+
+          <section className="vanity-embed-preview" aria-label="Discord link preview">
+            <h2 className="vanity-embed-preview-heading">Discord preview</h2>
+            <article className="vanity-embed-preview-card" style={{ borderLeftColor: vanityEmbedColor }}>
+              <h3 className="vanity-embed-preview-title">
+                {form.title || "Your title"}
+              </h3>
+              <p className="vanity-embed-preview-description">
+                {form.description || "Your description will appear here."}
+              </p>
+            </article>
+          </section>
 
           {needsSignIn && (
             <div className="vanity-manager-auth-prompt" role="group" aria-label="Sign in to claim your link">
