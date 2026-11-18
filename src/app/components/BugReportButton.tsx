@@ -137,6 +137,7 @@ export default function BugReportButton() {
                     ref={captchaRef}
                     sitekey={siteKey}
                     theme="dark"
+                    languageOverride="en"
                     onVerify={setCaptchaToken}
                     onExpire={() => setCaptchaToken(null)}
                     onError={() => setCaptchaToken(null)}

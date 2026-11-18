@@ -287,6 +287,7 @@ export default function DiscordUserLookup() {
                   onExpire={() => setCaptchaToken(null)}
                   ref={captchaRef}
                   theme="dark"
+                  languageOverride="en"
                 />
               ) : (
                 <div style={{ color: '#f87171', fontSize: '12px' }}>

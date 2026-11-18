@@ -252,84 +252,88 @@ export default function Home() {
     return matchesSearch && matchesCategory;
   });
   return (
-    <main className="page-wrap directory-page">
-      <header className="directory-header">
-        <p className="page-kicker">Discapp Toolkit</p>
-        <h1>Find easy to use tools for your Discord server!</h1>
-        
-        <form className="directory-filters" action="/" method="get" role="search">
-          <label className="directory-search">
-            <Search className="directory-search-icon" size={16} aria-hidden="true" />
-            <span className="sr-only">Search tools by name, description, or category</span>
-            <input
-              type="search"
-              name="q"
-              key={search}
-              defaultValue={searchQuery}
-              placeholder="Search tools by name or description..."
-            />
-          </label>
-          <label className="directory-category-control">
-            <span className="sr-only">Filter by category</span>
-            <select name="category" key={search} defaultValue={activeCategory}>
-              <option value="">All categories</option>
-              {categories.map((category) => <option key={category} value={category}>{category}</option>)}
-            </select>
-          </label>
-          <button className="directory-submit" type="submit">Filter</button>
-        </form>
-      </header>
+    <main className="directory-page">
+      <div className="directory-stage">
+        <header className="directory-header">
+          <h1 className="sr-only">Find easy to use tools for your Discord server!</h1>
+          <form className="directory-filters" action="/" method="get" role="search">
+            <label className="directory-search">
+              <Search className="directory-search-icon" size={16} aria-hidden="true" />
+              <span className="sr-only">Search tools by name, description, or category</span>
+              <input
+                type="search"
+                name="q"
+                key={search}
+                defaultValue={searchQuery}
+                placeholder="Search tools by name or description..."
+              />
+            </label>
+            <label className="directory-category-control">
+              <span className="sr-only">Filter by category</span>
+              <select name="category" key={search} defaultValue={activeCategory}>
+                <option value="">All categories</option>
+                {categories.map((category) => <option key={category} value={category}>{category}</option>)}
+              </select>
+            </label>
+            <button className="directory-submit" type="submit">Filter</button>
+          </form>
+        </header>
 
-      {!query && (
-        <section style={{ marginBottom: '32px' }}>
-          <p className="page-kicker" style={{ marginBottom: '12px', fontSize: '11px', fontWeight: '700', color: '#80848e' }}>Official Pages</p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {officialPages.map((page) => {
-              const IconComponent = page.icon;
-              return (
-                <Link key={page.href} className="tool-link" href={page.href}>
-                  <span className={`tool-icon ${page.iconClass}`} aria-hidden="true">
-                    <IconComponent size={24} />
-                  </span>
-                  <span className="tool-copy">
-                    <span className="tool-title">{page.title}</span>
-                    <span className="tool-description">{page.description}</span>
-                  </span>
-                  <ArrowUpRight className="tool-arrow" size={16} aria-hidden="true" />
-                </Link>
-              );
-            })}
-          </div>
-        </section>
-      )}
+        <div className="directory-content-panel">
+          {!query && (
+            <section className="directory-official-pages">
+              <p className="page-kicker directory-section-heading">Official Pages</p>
+              <div className="directory-link-list">
+                {officialPages.map((page) => {
+                  const IconComponent = page.icon;
+                  return (
+                    <Link key={page.href} className="tool-link" href={page.href}>
+                      <span className={`tool-icon ${page.iconClass}`} aria-hidden="true">
+                        <IconComponent size={24} />
+                      </span>
+                      <span className="tool-copy">
+                        <span className="tool-title">{page.title}</span>
+                        <span className="tool-description">{page.description}</span>
+                      </span>
+                      <ArrowUpRight className="tool-arrow" size={16} aria-hidden="true" />
+                    </Link>
+                  );
+                })}
+              </div>
+            </section>
+          )}
 
-      <section>
-        <p className="page-kicker directory-results-count" aria-live="polite">
-          {query || activeCategory ? `${filteredTools.length} matching tools` : 'Active Tools'}
+          <section>
+            <p className="page-kicker directory-results-count" aria-live="polite">
+              {query || activeCategory ? `${filteredTools.length} matching tools` : 'Active Tools'}
+            </p>
+            {filteredTools.length > 0 ? (
+              filteredTools.map((tool) => {
+                const IconComponent = tool.icon;
+                return (
+                  <Link key={tool.href} className="tool-link" href={tool.href}>
+                    <span className={`tool-icon ${tool.iconClass}`} aria-hidden="true">
+                      <IconComponent size={24} />
+                    </span>
+                    <span className="tool-copy">
+                      <span className="tool-title">{tool.title}</span>
+                      <span className="tool-description">{tool.description}</span>
+                    </span>
+                    <ArrowUpRight className="tool-arrow" size={16} aria-hidden="true" />
+                  </Link>
+                );
+              })
+            ) : (
+              <div className="empty-state" role="status">
+                No tools found matching &quot;{searchQuery}&quot;.
+              </div>
+            )}
+          </section>
+        </div>
+        <p className="directory-image-credit">
+          Picture by: <a href="https://theryan.discapp.org">@ryanparker2006</a>
         </p>
-        {filteredTools.length > 0 ? (
-          filteredTools.map((tool) => {
-            const IconComponent = tool.icon;
-            return (
-              <Link key={tool.href} className="tool-link" href={tool.href}>
-                <span className={`tool-icon ${tool.iconClass}`} aria-hidden="true">
-                  <IconComponent size={24} />
-                </span>
-                <span className="tool-copy">
-                  <span className="tool-title">{tool.title}</span>
-                  <span className="tool-description">{tool.description}</span>
-                </span>
-                <ArrowUpRight className="tool-arrow" size={16} aria-hidden="true" />
-              </Link>
-            );
-          })
-        ) : (
-          <div className="empty-state" role="status">
-            No tools found matching &quot;{searchQuery}&quot;.
-          </div>
-        )}
-      </section>
-
+      </div>
     </main>
   );
 }
