@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useSyncExternalStore } from 'react';
-import { ArrowUpRight, Webhook, Library, BadgePlus, UserSearch, Link2, Newspaper, Search, Package, Snowflake, Palette, PencilLine, ArrowDownWideNarrow, FileMusic, Scaling, Calculator, CalendarDays, TypeOutline, Space, KeyRound, BrickWallShield, Regex, Puzzle, Braces, Baseline, BookText } from 'lucide-react';
+import { ArrowUpRight, Webhook, Library, BadgePlus, UserSearch, Link2, Newspaper, Search, Package, Snowflake, Palette, PencilLine, ArrowDownWideNarrow, FileMusic, Scaling, Calculator, CalendarDays, TypeOutline, Space, KeyRound, BrickWallShield, Regex, Puzzle, Braces, Baseline, BookText, QrCode } from 'lucide-react';
 import { ServerSearch } from './components/icons/ServerSearch';
 
 const officialPages = [
@@ -134,6 +134,14 @@ const tools = [
     href: '/asset-resizer',
     icon: Scaling,
     iconClass: 'scaling'
+  },
+  {
+    title: 'Invite QR Code Generator',
+    description: 'Create a custom QR code for a Discord invite with colors, logos, and more.',
+    category: 'Assets & Media',
+    href: '/invite-qr-code',
+    icon: QrCode,
+    iconClass: 'qr-code'
   },
   {
     title: 'Permission Calculator',

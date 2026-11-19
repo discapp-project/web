@@ -12,6 +12,7 @@ const paths = [
   "/automod-tester",
   "/font-generator",
   "/gradient-finder",
+  "/invite-qr-code",
   "/markdown-cheatsheet",
   "/news",
   "/permission-calculator",
