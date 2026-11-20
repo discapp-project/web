@@ -37,6 +37,11 @@ interface DiscordUserResponse {
     nameplate?: {
       sku_id: string;
       asset: string;
+      assets?: {
+        static_image_url?: string;
+        animated_image_url?: string;
+        video_url?: string;
+      };
       label?: string;
       palette?: string;
     } | null;
@@ -202,6 +207,11 @@ export default function DiscordUserLookup() {
     ? `#${userData.accent_color.toString(16).padStart(6, '0')}`
     : '#5865F2';
 
+  const bannerUrl = userData ? getBannerUrl(userData.id, userData.banner) : null;
+  const nameplateUrl = userData?.collectibles?.nameplate
+    ? getNameplateUrl(userData.collectibles.nameplate.asset, userData.collectibles.nameplate.assets?.static_image_url)
+    : null;
+
   const snowflakeInfo = userData ? getCreationDate(userData.id) : null;
   const publicFlagsList = userData ? parseUserFlags(userData.public_flags || 0) : [];
   const flagsList = userData ? parseUserFlags(userData.flags || 0) : [];
@@ -366,7 +376,7 @@ export default function DiscordUserLookup() {
                   onClick={() => handleCopy(userData.id)}
                   style={{ backgroundColor: '#1c1d22', border: '1px solid #282a30', color: '#dcddde', padding: '6px 12px', borderRadius: '4px', fontSize: '12px', cursor: 'pointer', fontWeight: 600 }}
                 >
-                  {copied ? 'Copied ID' : 'Copy Snowflake ID'}
+                  {copied ? 'Copied ID' : 'Copy UserID'}
                 </button>
               </div>
             </div>
@@ -379,13 +389,13 @@ export default function DiscordUserLookup() {
                 Collectibles & Cosmetics
               </button>
               <button onClick={() => setActiveTab('clan')} className={`tab-btn ${activeTab === 'clan' ? 'active' : ''}`}>
-                Clan & Guild Identity
+                Guild Identity
               </button>
               <button onClick={() => setActiveTab('assets')} className={`tab-btn ${activeTab === 'assets' ? 'active' : ''}`}>
-                Raw CDN URLs
+                CDN URLs
               </button>
               <button onClick={() => setActiveTab('json')} className={`tab-btn ${activeTab === 'json' ? 'active' : ''}`}>
-                Full JSON Object
+                JSON Objects
               </button>
             </div>
 
@@ -495,6 +505,23 @@ export default function DiscordUserLookup() {
 
                 <div style={{ backgroundColor: '#121316', border: '1px solid #1c1d22', padding: '16px', borderRadius: '6px' }}>
                   <span style={{ fontSize: '13px', fontWeight: 700, color: '#ffffff', display: 'block', marginBottom: '12px' }}>
+                    Profile Banner
+                  </span>
+                  {bannerUrl ? (
+                    <a href={bannerUrl} target="_blank" rel="noreferrer" style={{ display: 'block' }}>
+                      <img
+                        src={bannerUrl}
+                        alt={`${userData.global_name || userData.username}'s profile banner`}
+                        style={{ display: 'block', width: '100%', maxHeight: '240px', objectFit: 'contain', backgroundColor: '#09090b', borderRadius: '4px' }}
+                      />
+                    </a>
+                  ) : (
+                    <span style={{ fontSize: '12px', color: '#8e9297', fontStyle: 'italic' }}>No profile banner set.</span>
+                  )}
+                </div>
+
+                <div style={{ backgroundColor: '#121316', border: '1px solid #1c1d22', padding: '16px', borderRadius: '6px' }}>
+                  <span style={{ fontSize: '13px', fontWeight: 700, color: '#ffffff', display: 'block', marginBottom: '12px' }}>
                     Avatar Decoration Data
                   </span>
                   {userData.avatar_decoration_data ? (
@@ -521,10 +548,10 @@ export default function DiscordUserLookup() {
                   </span>
                   {userData.collectibles?.nameplate ? (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                      {getNameplateUrl(userData.collectibles.nameplate.asset) && (
+                      {nameplateUrl && (
                         <div style={{ backgroundColor: '#09090b', padding: '8px', borderRadius: '4px', border: '1px solid #1c1d22', width: 'fit-content' }}>
                           <img
-                            src={getNameplateUrl(userData.collectibles.nameplate.asset)!}
+                            src={nameplateUrl}
                             alt="Nameplate Preview"
                             style={{ maxHeight: '48px', objectFit: 'contain' }}
                           />
@@ -650,7 +677,7 @@ export default function DiscordUserLookup() {
             {activeTab === 'assets' && (
               <div style={{ backgroundColor: '#121316', border: '1px solid #1c1d22', padding: '16px', borderRadius: '6px' }}>
                 <span style={{ fontSize: '13px', fontWeight: 700, color: '#ffffff', display: 'block', marginBottom: '12px' }}>
-                  Direct Asset Links
+                  Assets
                 </span>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                   <div style={{ backgroundColor: '#09090b', border: '1px solid #1c1d22', padding: '10px 12px', borderRadius: '4px' }}>
@@ -660,20 +687,20 @@ export default function DiscordUserLookup() {
                     </a>
                   </div>
 
-                  {getBannerUrl(userData.id, userData.banner) && (
+                  {bannerUrl && (
                     <div style={{ backgroundColor: '#09090b', border: '1px solid #1c1d22', padding: '10px 12px', borderRadius: '4px' }}>
                       <span style={{ fontSize: '11px', color: '#8e9297', display: 'block', marginBottom: '2px' }}>Banner CDN (1024px)</span>
-                      <a href={getBannerUrl(userData.id, userData.banner)!} target="_blank" rel="noreferrer" style={{ fontSize: '12px', color: '#38bdf8', wordBreak: 'break-all', textDecoration: 'none' }}>
-                        {getBannerUrl(userData.id, userData.banner)}
+                      <a href={bannerUrl} target="_blank" rel="noreferrer" style={{ fontSize: '12px', color: '#38bdf8', wordBreak: 'break-all', textDecoration: 'none' }}>
+                        {bannerUrl}
                       </a>
                     </div>
                   )}
 
-                  {userData.collectibles?.nameplate && getNameplateUrl(userData.collectibles.nameplate.asset) && (
+                  {userData.collectibles?.nameplate && nameplateUrl && (
                     <div style={{ backgroundColor: '#09090b', border: '1px solid #1c1d22', padding: '10px 12px', borderRadius: '4px' }}>
                       <span style={{ fontSize: '11px', color: '#8e9297', display: 'block', marginBottom: '2px' }}>Nameplate CDN Asset</span>
-                      <a href={getNameplateUrl(userData.collectibles.nameplate.asset)!} target="_blank" rel="noreferrer" style={{ fontSize: '12px', color: '#38bdf8', wordBreak: 'break-all', textDecoration: 'none' }}>
-                        {getNameplateUrl(userData.collectibles.nameplate.asset)}
+                      <a href={nameplateUrl} target="_blank" rel="noreferrer" style={{ fontSize: '12px', color: '#38bdf8', wordBreak: 'break-all', textDecoration: 'none' }}>
+                        {nameplateUrl}
                       </a>
                     </div>
                   )}
@@ -693,12 +720,12 @@ export default function DiscordUserLookup() {
             {activeTab === 'json' && (
               <div style={{ backgroundColor: '#121316', border: '1px solid #1c1d22', borderRadius: '6px', padding: '16px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', flexWrap: 'wrap', gap: '8px' }}>
-                  <span style={{ fontSize: '13px', fontWeight: 700, color: '#ffffff' }}>Unfiltered API Response Body</span>
+                  <span style={{ fontSize: '13px', fontWeight: 700, color: '#ffffff' }}>JSON</span>
                   <button
                     onClick={() => handleCopy(rawJson || '')}
                     style={{ backgroundColor: '#1c1d22', color: '#dcddde', border: '1px solid #282a30', padding: '4px 10px', borderRadius: '4px', fontSize: '12px', cursor: 'pointer' }}
                   >
-                    {copied ? 'Copied' : 'Copy JSON'}
+                    {copied ? 'Copied' : 'Copy'}
                   </button>
                 </div>
                 <pre className="custom-scroll" style={{ backgroundColor: '#09090b', border: '1px solid #1c1d22', borderRadius: '4px', padding: '12px', overflowX: 'auto', fontSize: '12px', color: '#8e9297', margin: 0, maxHeight: '500px', fontFamily: 'monospace', lineHeight: '1.5' }}>

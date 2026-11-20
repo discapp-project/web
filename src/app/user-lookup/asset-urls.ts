@@ -1,7 +1,7 @@
 const discordCdn = "https://cdn.discordapp.com";
 const discordIdPattern = /^\d{17,20}$/;
 const assetHashPattern = /^[A-Za-z0-9_-]{1,128}$/;
-const nameplatePathPattern = /^[A-Za-z0-9/_-]{1,200}$/;
+const nameplatePathPattern = /^[A-Za-z0-9/_-]{1,200}(?:\/(?:asset|img|static)\.(?:png|webp|gif|webm))?$/i;
 
 export function getAvatarUrl(id: string, hash: string | null) {
   if (!discordIdPattern.test(id)) return `${discordCdn}/embed/avatars/0.png`;
@@ -29,13 +29,31 @@ export function getAvatarDecorationUrl(asset?: string) {
   return `${discordCdn}/avatar-decoration-presets/${asset}.png`;
 }
 
-export function getNameplateUrl(assetPath?: string) {
+export function getNameplateUrl(assetPath?: string, staticImageUrl?: string) {
+  if (staticImageUrl) {
+    try {
+      const imageUrl = new URL(staticImageUrl);
+      if (
+        imageUrl.protocol === "https:"
+        && imageUrl.hostname === "cdn.discordapp.com"
+        && imageUrl.pathname.startsWith("/assets/collectibles/")
+      ) {
+        return imageUrl.toString();
+      }
+    } catch {
+      return null;
+    }
+  }
+
   if (!assetPath || assetPath.length > 256) return null;
 
-  const prefix = `${discordCdn}/assets/`;
+  const prefix = `${discordCdn}/assets/collectibles/`;
+  const existingPrefix = `${discordCdn}/assets/`;
   const relativePath = assetPath.startsWith(prefix)
     ? assetPath.slice(prefix.length)
-    : assetPath;
+    : assetPath.startsWith(existingPrefix)
+      ? assetPath.slice(existingPrefix.length)
+      : assetPath;
   const path = relativePath.replace(/\/$/, "");
 
   if (
@@ -48,5 +66,9 @@ export function getNameplateUrl(assetPath?: string) {
     return null;
   }
 
-  return `${prefix}${path}/asset.png`;
+  const assetFilePath = /\/(?:asset|img|static)\.(?:png|webp|gif|webm)$/i.test(path)
+    ? path
+    : `${path}/static.png`;
+
+  return `${prefix}${assetFilePath}`;
 }
