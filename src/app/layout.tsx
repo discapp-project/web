@@ -61,7 +61,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <nav className="topbar" aria-label="Main navigation">
             <Link className="brand" href="/">DISCAPP</Link>
             <div className="topbar-actions">
-              <Link className="topbar-link topbar-community" href="https://discord.gg/ymc3Ba4qk9">Join the Community!</Link>
+              <Link className="topbar-link topbar-community" href="https://discord.gg/zRrTVfuAMN">Join the Community!</Link>
               <BugReportButton />
               <AuthControl />
               <Link 
