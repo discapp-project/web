@@ -27,7 +27,7 @@ function makeField(index: number): ModalField {
   };
 }
 
-export default function ModalDesigner() {
+export default function ModalBuilder() {
   const [title, setTitle] = useState("Tell us more");
   const [customId, setCustomId] = useState("feedback_modal");
   const [fields, setFields] = useState<ModalField[]>([makeField(1)]);
@@ -92,12 +92,12 @@ export default function ModalDesigner() {
     <main className="tool-page modal-tool-page">
       <header className="tool-page-heading">
         <div className="modal-page-heading-row">
-          <h1>Discord Modal Designer</h1>
+          <h1>Discord Modal Builder</h1>
         </div>
         <p>Design and preview a modal response for a Discord application interaction.</p>
       </header>
 
-      <section className="modal-designer" aria-label="Discord modal designer">
+      <section className="modal-builder" aria-label="Discord modal builder">
       <div className="modal-editor">
         <p className="modal-capability-note" role="note">
           This is a preview and JSON export. We can not send or maintain modals for you. For information on how to implement modals, check out the <a href="https://docs.discord.com/developers/components/using-modal-components" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>Discord Documentation</a>.
@@ -165,7 +165,7 @@ export default function ModalDesigner() {
           ))}
         </div>
 
-        <div className="modal-designer-actions">
+        <div className="modal-builder-actions">
           <button type="button" disabled={fields.length >= 5} onClick={() => setFields((current) => [...current, makeField(current.length + 1)])}>
             <Plus size={14} /> Add text input
           </button>

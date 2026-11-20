@@ -1,12 +1,12 @@
 import { createPageMetadata } from "../page-metadata";
-import ModalDesigner from "./modal-designer";
+import ModalBuilder from "./modal-builder";
 
 export const metadata = createPageMetadata({
-  title: "Discord Modal Designer | Discapp",
+  title: "Discord Modal Builder | Discapp",
   description: "Design and preview Discord modal forms, validate text inputs, and export interaction response JSON.",
-  path: "/modal-designer",
+  path: "/modal-builder",
 });
 
-export default function ModalDesignerPage() {
-  return <ModalDesigner />;
+export default function ModalBuilderPage() {
+  return <ModalBuilder />;
 }

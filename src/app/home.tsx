@@ -32,10 +32,10 @@ const tools = [
     iconClass: 'webhook-icon'
   },
   {
-    title: 'Modal Designer',
+    title: 'Modal Builder',
     description: 'Design Discord modal forms and export interaction response JSON.',
     category: 'Webhooks & Integrations',
-    href: '/modal-designer',
+    href: '/modal-builder',
     icon: FileText,
     iconClass: 'webhook-icon'
   },
