@@ -307,6 +307,39 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
 .compressor-output-size .is-within-limit { color: var(--accent); }
 .compressor-output-size .is-over-limit { color: #f0a2ad; }
 .compressor-error { margin: 0; color: #f0a2ad; font-size: 12px; line-height: 1.5; }
+.video-compressor-page { width: min(896px, calc(100% - 40px)); }
+.video-compressor-panel { gap: 18px; }
+.video-target-section { display: flex; flex-direction: column; gap: 9px; }
+.video-section-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; color: #d9dbe2; font-size: 12px; font-weight: 600; }
+.video-section-heading strong { color: var(--accent); font-family: Consolas, monospace; font-size: 14px; font-weight: 650; }
+.video-target-range { width: 100%; margin: 3px 0 0; accent-color: var(--accent); cursor: pointer; }
+.video-target-scale { display: flex; justify-content: space-between; margin-top: -6px; color: var(--subtle); font-size: 10px; }
+.video-target-hint { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.5; }
+.compressor-file-label.is-dragging { border-color: var(--accent); background: var(--accent-wash); }
+.video-compression-settings { display: flex; flex-direction: column; gap: 10px; border: 1px solid var(--line); border-radius: 4px; padding: 14px; background: rgba(255,255,255,.015); }
+.video-range-labels { display: flex; justify-content: space-between; color: var(--subtle); font-size: 10px; }
+.video-advanced-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 5px; }
+.video-advanced-options .tool-field { gap: 6px; }
+.video-audio-toggle { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 11px; cursor: pointer; }
+.video-audio-toggle input { width: 15px; height: 15px; margin: 0; accent-color: var(--accent); }
+.video-compressor-actions { display: flex; gap: 8px; margin-top: 3px; }
+.video-cancel-button { width: 40px; min-height: 38px; display: grid; flex: 0 0 auto; place-items: center; border: 1px solid var(--line-strong); border-radius: 4px; color: var(--muted); background: transparent; cursor: pointer; }
+.video-cancel-button:hover { border-color: rgba(240,162,173,.45); color: #f0a2ad; }
+.video-spinner { animation: auth-control-spin .8s linear infinite; }
+.video-progress { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 10px; }
+.video-progress-track { height: 4px; flex: 1; appearance: none; overflow: hidden; border: 0; border-radius: 2px; background: #303137; }
+.video-progress-track::-webkit-progress-bar { border-radius: inherit; background: #303137; }
+.video-progress-track::-webkit-progress-value { border-radius: inherit; background: var(--accent); transition: width .2s linear; }
+.video-progress-track::-moz-progress-bar { border-radius: inherit; background: var(--accent); }
+.video-local-note, .video-privacy-note { margin: 0; color: var(--subtle); font-size: 10px; line-height: 1.5; }
+.video-privacy-note { text-align: center; }
+.video-preview { height: clamp(150px, 30vw, 260px); display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 10px; border: 1px solid var(--line); border-radius: 3px; background: #090a0b; }
+.video-preview video { width: 100%; height: 100%; object-fit: contain; }
+.video-fit-message { margin: -4px 0 12px; font-size: 10px; line-height: 1.45; }
+.video-fit-message.is-fit { color: var(--accent); }
+.video-fit-message.is-over { color: #f0a2ad; }
+.video-reselect-button { display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; border: 0; padding: 0; color: var(--muted); background: transparent; font-size: 11px; cursor: pointer; }
+.video-reselect-button:hover { color: var(--text); }
 .news-list { display: flex; flex-direction: column; gap: 12px; }
 .news-card { display: block; border: 1px solid var(--line); border-radius: 5px; padding: 18px; color: inherit; text-decoration: none; transition: border-color .15s, background-color .15s; }
 .news-card:hover { border-color: var(--line-strong); background: rgba(255,255,255,.025); }

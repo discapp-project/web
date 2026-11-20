@@ -28,6 +28,7 @@ const paths = [
   "/terms-of-use",
   "/timestamp-generator",
   "/user-lookup",
+  "/video-compressor",
   "/vanity-checker",
   "/vanity-url",
   "/webhook-builder",
