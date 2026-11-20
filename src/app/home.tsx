@@ -271,7 +271,7 @@ export default function Home() {
     <main className="directory-page">
       <div className="directory-stage">
         <header className="directory-header">
-          <h1 className="sr-only">Find easy to use tools for your Discord server!</h1>
+          <h1 className="directory-title">The largest directory of Discord tools.</h1>
           <form className="directory-filters" action="/" method="get" role="search">
             <label className="directory-search">
               <Search className="directory-search-icon" size={16} aria-hidden="true" />
