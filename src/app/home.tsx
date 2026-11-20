@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useSyncExternalStore } from 'react';
-import { ArrowUpRight, Webhook, Library, BadgePlus, UserSearch, Link2, Newspaper, Search, Package, Snowflake, Palette, PencilLine, ArrowDownWideNarrow, FileMusic, Scaling, Calculator, CalendarDays, TypeOutline, Space, KeyRound, BrickWallShield, Regex, Puzzle, Braces, Baseline, BookText, QrCode } from 'lucide-react';
+import { ArrowUpRight, Webhook, Library, BadgePlus, UserSearch, Link2, Newspaper, Search, Package, Snowflake, Palette, PencilLine, ArrowDownWideNarrow, FileMusic, Scaling, Calculator, CalendarDays, TypeOutline, Space, KeyRound, BrickWallShield, Regex, Puzzle, Braces, Baseline, BookText, QrCode, FileText } from 'lucide-react';
 import { ServerSearch } from './components/icons/ServerSearch';
 
 const officialPages = [
@@ -29,6 +29,14 @@ const tools = [
     category: 'Webhooks & Integrations',
     href: '/webhook-builder',
     icon: Webhook,
+    iconClass: 'webhook-icon'
+  },
+  {
+    title: 'Modal Designer',
+    description: 'Design Discord modal forms and export interaction response JSON.',
+    category: 'Webhooks & Integrations',
+    href: '/modal-designer',
+    icon: FileText,
     iconClass: 'webhook-icon'
   },
   {

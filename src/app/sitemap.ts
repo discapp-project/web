@@ -14,6 +14,7 @@ const paths = [
   "/gradient-finder",
   "/invite-qr-code",
   "/markdown-cheatsheet",
+  "/modal-designer",
   "/news",
   "/permission-calculator",
   "/privacy",
