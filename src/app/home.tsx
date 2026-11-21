@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useSyncExternalStore } from 'react';
-import { ArrowUpRight, Webhook, Library, BadgePlus, UserSearch, Link2, Newspaper, Search, Package, Snowflake, Palette, PencilLine, ArrowDownWideNarrow, FileMusic, Scaling, Calculator, CalendarDays, TypeOutline, Space, KeyRound, BrickWallShield, Regex, Puzzle, Braces, Baseline, BookText, QrCode, FileText, Video, Shapes } from 'lucide-react';
+import { ArrowUpRight, Webhook, Library, BadgePlus, UserSearch, Link2, Newspaper, Search, Package, Snowflake, Palette, PencilLine, ArrowDownWideNarrow, FileMusic, Scaling, Calculator, CalendarDays, TypeOutline, Space, KeyRound, BrickWallShield, Regex, Puzzle, Braces, Baseline, BookText, QrCode, FileText, Video, Shapes, Hash } from 'lucide-react';
 import { ServerSearch } from './components/icons/ServerSearch';
 
 const officialPages = [
@@ -126,6 +126,14 @@ const tools = [
     href: '/symbol-library',
     icon: Shapes,
     iconClass: 'symbol-library-icon'
+  },
+  {
+    title: 'Channel Beautifier',
+    description: 'Style channel names and copy separator bars, brackets, and decorations.',
+    category: 'Text & Formatting',
+    href: '/channel-beautifier',
+    icon: Hash,
+    iconClass: 'hash'
   },
   {
     title: 'Asset Compressor',

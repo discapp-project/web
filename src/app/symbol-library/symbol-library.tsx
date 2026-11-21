@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import Link from 'next/link';
 import { Check, Copy, Search, Shapes } from 'lucide-react';
 
 interface SymbolItem {
@@ -97,7 +98,7 @@ export default function SymbolLibrary() {
 
       <aside className="symbol-channel-note" aria-label="Channel symbol tip">
         <Shapes size={17} aria-hidden="true" />
-        <p><strong>Looking for symbols for channels?</strong> Use the Channel Beautifier tool for symbols specialized for channels. (UNDER MAINTENANCE)</p>
+        <p><strong>Looking for symbols for channels?</strong> Use the <Link href="/channel-beautifier">Channel Beautifier</Link> for channel names and decorations.</p>
       </aside>
 
       <section className="symbol-toolbar" aria-label="Symbol library controls">

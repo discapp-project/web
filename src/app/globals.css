@@ -252,6 +252,41 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
 .symbol-glyph { max-width: 100%; font-family: 'Segoe UI Symbol', 'Noto Sans Symbols 2', sans-serif; font-size: clamp(16px, 2.1vw, 23px); line-height: 1; }
 .symbol-copied { position: absolute; inset: auto 4px 4px; display: flex; align-items: center; justify-content: center; gap: 3px; border-radius: 3px; padding: 3px; color: #111714; background: var(--accent); font-size: 8px; font-weight: 750; }
 .symbol-empty { min-height: 180px; display: grid; place-items: center; border: 1px dashed var(--line-strong); border-radius: 5px; color: var(--muted); font-size: 12px; }
+.channel-beautifier-page { width: min(920px, calc(100% - 40px)); }
+.channel-builder { display: grid; grid-template-columns: 1fr; gap: 12px; border: 1px solid var(--line); border-radius: 5px; padding: 14px; background: var(--surface); }
+.channel-name-field { display: flex; flex-direction: column; gap: 6px; color: var(--subtle); font-size: 9px; font-weight: 650; text-transform: uppercase; }
+.channel-name-field input { height: 40px; width: 100%; border: 1px solid var(--line-strong); border-radius: 4px; padding: 0 10px; color: var(--text); background: var(--bg); font-size: 13px; text-transform: none; }
+.channel-name-field input:focus { border-color: var(--accent-line); outline: none; }
+.channel-preview { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 52px; border-top: 1px solid var(--line); padding-top: 12px; }
+.channel-preview span { color: var(--subtle); font-size: 9px; font-weight: 650; text-transform: uppercase; }
+.channel-preview strong { min-width: 0; color: #f2f3f5; font-size: 16px; overflow-wrap: anywhere; }
+.channel-fonts, .channel-symbol-section { margin-top: 28px; }
+.channel-section-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 9px; }
+.channel-section-heading h2 { margin: 0; font-size: 14px; }
+.channel-section-heading p { margin: 0; color: var(--subtle); font-size: 10px; }
+.channel-font-grid { border: 1px solid var(--line); border-radius: 5px; overflow: hidden; }
+.channel-font-row { width: 100%; min-height: 48px; display: grid; grid-template-columns: 150px minmax(0, 1fr) 18px; align-items: center; gap: 12px; border: 0; border-bottom: 1px solid var(--line); padding: 7px 12px; color: var(--text); background: var(--surface); text-align: left; cursor: pointer; }
+.channel-font-row:last-child { border-bottom: 0; }
+.channel-font-row:hover { background: #20222b; }
+.channel-font-row > span { color: var(--muted); font-size: 11px; }
+.channel-font-row strong { min-width: 0; color: #eceef4; font-size: 16px; overflow-wrap: anywhere; }
+.channel-font-row svg { justify-self: end; color: var(--subtle); }
+.channel-font-row:hover svg { color: var(--accent); }
+.channel-font-row strong.small-caps { font-variant: small-caps; }
+.channel-font-row strong.bold-italic { font-style: italic; }
+.channel-font-row strong.monospace { font-family: monospace; }
+.channel-symbol-search { height: 40px; display: flex; align-items: center; gap: 9px; width: 100%; margin-bottom: 14px; border: 1px solid var(--line-strong); border-radius: 4px; padding: 0 11px; background: var(--surface); }
+.channel-symbol-search:focus-within { border-color: var(--accent-line); }
+.channel-symbol-search svg { color: var(--subtle); }
+.channel-symbol-search input { width: 100%; border: 0; outline: 0; color: var(--text); background: transparent; font-size: 12px; }
+.channel-symbol-category { margin-top: 14px; }
+.channel-symbol-category h3 { margin: 0 0 7px; color: #c7a7ff; font-size: 11px; }
+.channel-symbol-grid { display: grid; grid-template-columns: repeat(12, minmax(48px, 1fr)); gap: 5px; }
+.channel-symbol-cell { position: relative; aspect-ratio: 1.45; min-width: 0; display: grid; place-items: center; overflow: hidden; border: 1px solid rgba(255,255,255,.055); border-radius: 4px; color: #cbd0dc; background: #171923; cursor: pointer; }
+.channel-symbol-cell:hover { border-color: var(--accent-line); color: white; background: #20232f; }
+.channel-symbol-cell span { max-width: 100%; padding: 3px; font-family: 'Segoe UI Symbol', 'Noto Sans Symbols 2', sans-serif; font-size: clamp(12px, 1.5vw, 17px); white-space: nowrap; }
+.channel-symbol-check { position: absolute; right: 4px; bottom: 4px; color: var(--accent); }
+.channel-symbol-empty { min-height: 140px; display: grid; place-items: center; border: 1px dashed var(--line-strong); border-radius: 5px; color: var(--muted); font-size: 12px; }
 .tool-panel { display: flex; flex-direction: column; gap: 18px; border: 1px solid var(--line); border-radius: 5px; padding: 20px; background: var(--surface); }
 .vanity-manager-panel { max-width: 820px; }
 .vanity-manager-form { display: flex; flex-direction: column; gap: 18px; }
@@ -725,6 +760,11 @@ a.preview-embed-title:hover { text-decoration: underline; }
   .symbol-grid { grid-template-columns: repeat(6, minmax(44px, 1fr)); }
   .symbol-results-heading p:last-child { display: none; }
   .mobile-stack-grid { grid-template-columns: minmax(0, 1fr) !important; }
+  .channel-beautifier-page { width: calc(100% - 34px); }
+  .channel-builder { grid-template-columns: 1fr; }
+  .channel-preview { grid-column: 1; }
+  .channel-font-row { grid-template-columns: 110px minmax(0, 1fr) 16px; }
+  .channel-symbol-grid { grid-template-columns: repeat(6, minmax(44px, 1fr)); }
 }
 @media (max-width: 600px) {
   .role-icon-builder { padding: 16px !important; }
