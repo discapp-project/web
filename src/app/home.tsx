@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useSyncExternalStore } from 'react';
-import { ArrowUpRight, Webhook, Library, BadgePlus, UserSearch, Link2, Newspaper, Search, Package, Snowflake, Palette, PencilLine, ArrowDownWideNarrow, FileMusic, Scaling, Calculator, CalendarDays, TypeOutline, Space, KeyRound, BrickWallShield, Regex, Puzzle, Braces, Baseline, BookText, QrCode, FileText, Video, Shapes, Hash, MessageSquare } from 'lucide-react';
+import { ArrowUpRight, Webhook, Library, BadgePlus, UserSearch, Link2, Newspaper, Search, Package, Snowflake, Palette, PencilLine, ArrowDownWideNarrow, FileMusic, Scaling, Calculator, CalendarDays, TypeOutline, Space, KeyRound, BrickWallShield, Regex, Puzzle, Braces, Baseline, BookText, QrCode, FileText, Video, Shapes, Hash, MessageSquare, SplinePointer } from 'lucide-react';
 import { ServerSearch } from './components/icons/ServerSearch';
 
 const officialPages = [
@@ -84,7 +84,7 @@ const tools = [
     description: 'Claim one custom Discapp link for a Discord invite.',
     category: 'Lookups & Utilities',
     href: '/vanity-url',
-    icon: Link2,
+    icon: SplinePointer,
     iconClass: 'vanity-icon'
   },
   {
