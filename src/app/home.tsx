@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useSyncExternalStore } from 'react';
-import { ArrowUpRight, Webhook, Library, BadgePlus, UserSearch, Link2, Newspaper, Search, Package, Snowflake, Palette, PencilLine, ArrowDownWideNarrow, FileMusic, Scaling, Calculator, CalendarDays, TypeOutline, Space, KeyRound, BrickWallShield, Regex, Puzzle, Braces, Baseline, BookText, QrCode, FileText, Video, Shapes, Hash } from 'lucide-react';
+import { ArrowUpRight, Webhook, Library, BadgePlus, UserSearch, Link2, Newspaper, Search, Package, Snowflake, Palette, PencilLine, ArrowDownWideNarrow, FileMusic, Scaling, Calculator, CalendarDays, TypeOutline, Space, KeyRound, BrickWallShield, Regex, Puzzle, Braces, Baseline, BookText, QrCode, FileText, Video, Shapes, Hash, MessageSquare } from 'lucide-react';
 import { ServerSearch } from './components/icons/ServerSearch';
 
 const officialPages = [
@@ -134,6 +134,14 @@ const tools = [
     href: '/channel-beautifier',
     icon: Hash,
     iconClass: 'hash'
+  },
+  {
+    title: 'Message Spoofer',
+    description: 'Create a spoofed message for mockups, stories, and design previews.',
+    category: 'Text & Formatting',
+    href: '/message-spoofer',
+    icon: MessageSquare,
+    iconClass: 'pencil-line'
   },
   {
     title: 'Asset Compressor',

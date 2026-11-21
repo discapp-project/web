@@ -10,6 +10,7 @@ const paths = [
   "/automod-library",
   "/automod-permission-decoder",
   "/automod-tester",
+  "/message-spoofer",
   "/font-generator",
   "/gradient-finder",
   "/invite-qr-code",
