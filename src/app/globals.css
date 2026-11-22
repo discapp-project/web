@@ -335,6 +335,14 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
 .tool-button:hover:not(:disabled) { filter: brightness(.94); }
 .tool-button:disabled { opacity: .5; cursor: not-allowed; }
 .timestamp-panel { max-width: 620px; }
+.mention-panel { width: 100%; }
+.mention-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.mention-fields-single { grid-template-columns: minmax(0, 1fr); }
+.mention-wide-field { grid-column: 1 / -1; }
+.mention-field-error { color: #f0a2ad; font-size: 10px; font-weight: 400; }
+.mention-checkbox { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 11px; }
+.mention-checkbox input { width: 15px; height: 15px; margin: 0; accent-color: var(--accent); }
+.mention-output-row { display: flex; align-items: stretch; gap: 9px; margin-top: 2px; }
 .timestamp-output-row { display: flex; align-items: stretch; gap: 9px; margin-top: 2px; }
 .tool-code-output { min-width: 0; display: flex; flex: 1; align-items: center; overflow-x: auto; border: 1px solid var(--line); border-radius: 4px; padding: 0 11px; color: var(--accent); background: var(--bg); font: 13px/1.4 Consolas, monospace; white-space: nowrap; }
 .tool-status { min-height: 18px; margin: -7px 0 0; color: var(--muted); font-size: 11px; line-height: 1.5; }
@@ -794,11 +802,13 @@ a.preview-embed-title:hover { text-decoration: underline; }
   .tool-page-heading { margin-bottom: 20px; }
   .tool-page-heading h1 { font-size: 23px; }
   .tool-panel { padding: 14px; }
+  .mention-fields { grid-template-columns: minmax(0, 1fr); }
+  .mention-wide-field { grid-column: auto; }
   .vanity-manager-columns { grid-template-columns: minmax(0, 1fr); gap: 15px; }
   .vanity-manager-panel { padding: 14px; }
   .vanity-manager-description { min-height: 100px; }
   .vanity-manager-auth-prompt { align-items: stretch; flex-direction: column; gap: 10px; }
-  .tool-control-row, .timestamp-output-row { align-items: stretch; flex-direction: column; }
+  .tool-control-row, .timestamp-output-row, .mention-output-row { align-items: stretch; flex-direction: column; }
   .tool-button { width: 100%; }
   .tool-code-output { min-height: 40px; }
   .directory-page { width: calc(100% - 24px); margin-top: 12px; margin-bottom: 42px; }

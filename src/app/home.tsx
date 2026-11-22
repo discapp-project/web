@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useSyncExternalStore } from 'react';
-import { ArrowUpRight, Webhook, Library, BadgePlus, UserSearch, Link2, Newspaper, Search, Package, Snowflake, Palette, PencilLine, ArrowDownWideNarrow, FileMusic, Scaling, Calculator, CalendarDays, TypeOutline, Space, KeyRound, BrickWallShield, Regex, Puzzle, Braces, Baseline, BookText, QrCode, FileText, Video, Shapes, Hash, MessageSquare, SplinePointer } from 'lucide-react';
+import { ArrowUpRight, Webhook, Library, BadgePlus, UserSearch, Link2, Newspaper, Search, Package, Snowflake, Palette, PencilLine, ArrowDownWideNarrow, FileMusic, Scaling, Calculator, CalendarDays, TypeOutline, Space, KeyRound, BrickWallShield, Regex, Puzzle, Braces, Baseline, BookText, QrCode, FileText, Video, Shapes, Hash, MessageSquare, SplinePointer, AtSign } from 'lucide-react';
 import { ServerSearch } from './components/icons/ServerSearch';
 
 const officialPages = [
@@ -198,6 +198,14 @@ const tools = [
     href: '/timestamp-generator',
     icon: CalendarDays,
     iconClass: 'CalendarDays'
+  },
+  {
+    title: 'Mention Generator',
+    description: 'Generate Discord syntax for users, roles, channels, emojis, and slash commands.',
+    category: 'Text & Formatting',
+    href: '/mention-generator',
+    icon: AtSign,
+    iconClass: 'pencil-line'
   },
   {
     title: 'Font Generator',
