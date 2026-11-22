@@ -64,7 +64,7 @@ export default function MentionGenerator() {
   return (
     <main className="tool-page">
       <header className="tool-page-heading">
-        <h1>Discord Mention Generator</h1>
+        <h1>Mention Generator</h1>
         <p>Build mention syntax for Discord users, roles, channels, emojis, and commands.</p>
       </header>
 
