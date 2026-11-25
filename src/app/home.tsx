@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useSyncExternalStore } from 'react';
-import { ArrowUpRight, Webhook, Library, BadgePlus, UserSearch, Link2, Newspaper, Search, Package, Snowflake, Palette, PencilLine, ArrowDownWideNarrow, FileMusic, Scaling, Calculator, CalendarDays, TypeOutline, Space, KeyRound, BrickWallShield, Regex, Puzzle, Braces, Baseline, BookText, QrCode, FileText, Video, Shapes, Hash, MessageSquare, SplinePointer, AtSign } from 'lucide-react';
+import { ArrowUpRight, Webhook, Library, BadgePlus, UserSearch, Link2, Newspaper, Search, Package, Snowflake, Palette, PencilLine, ArrowDownWideNarrow, FileMusic, Scaling, Calculator, CalendarDays, TypeOutline, Space, KeyRound, BrickWallShield, Regex, Puzzle, Braces, Baseline, BookText, QrCode, FileText, Video, Shapes, Hash, MessageSquare, SplinePointer, AtSign, LayoutTemplate } from 'lucide-react';
 import { ServerSearch } from './components/icons/ServerSearch';
 
 const officialPages = [
@@ -37,6 +37,14 @@ const tools = [
     category: 'Webhooks & Integrations',
     href: '/modal-builder',
     icon: FileText,
+    iconClass: 'webhook-icon'
+  },
+  {
+    title: 'Meta Component Builder',
+    description: 'Create website embeds for Discord with full component support.',
+    category: 'Webhooks & Integrations',
+    href: '/meta-component-builder',
+    icon: LayoutTemplate,
     iconClass: 'webhook-icon'
   },
   {

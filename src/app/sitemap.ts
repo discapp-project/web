@@ -11,6 +11,7 @@ const paths = [
   "/automod-permission-decoder",
   "/automod-tester",
   "/channel-beautifier",
+  "/meta-component-builder",
   "/message-spoofer",
   "/font-generator",
   "/gradient-finder",

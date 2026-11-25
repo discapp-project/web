@@ -17,6 +17,7 @@ const reservedVanitySlugs = new Set([
   "automod-permission-decoder",
   "automod-tester",
   "channel-beautifier",
+  "meta-component-builder",
   "favicon",
   "font-generator",
   "gradient-finder",
